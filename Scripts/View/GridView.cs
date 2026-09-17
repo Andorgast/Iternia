@@ -1,5 +1,5 @@
 using Godot;
-using Iternia.Core;
+using Iternia.Scripts.Core;
 using System.Collections.Generic;
 
 namespace Iternia.View;
