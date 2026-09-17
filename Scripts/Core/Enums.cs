@@ -1,4 +1,4 @@
-namespace Iternia.Core;
+namespace Iternia.Scripts.Core;
 
 public enum TargetSide
 {
