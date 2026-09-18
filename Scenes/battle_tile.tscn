@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b72lkjg7bwwx7"]
+
+[ext_resource type="Script" uid="uid://dksnflekl8rht" path="res://Scripts/View/BattleTile.cs" id="1_xkj1e"]
+[ext_resource type="Texture2D" uid="uid://i1afdqkbrpw" path="res://icon.svg" id="2_lmaiv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ix2id"]
+size = Vector2(64, 64)
+
+[node name="BattleTile" type="Area2D" unique_id=330090911]
+script = ExtResource("1_xkj1e")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=89027101]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_lmaiv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2103591094]
+shape = SubResource("RectangleShape2D_ix2id")
