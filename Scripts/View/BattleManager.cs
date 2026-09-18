@@ -29,6 +29,12 @@ public partial class BattleManager : Node
         SpawnTestUnit("player_2", TargetSide.Ally, new GridPos(2, 1), 11);
         SpawnTestUnit("enemy_1", TargetSide.Enemy, new GridPos(0, 1), 10);
 
+        var burnEffectEvents = _sim.TrySpawnTileEffect(_state, TargetSide.Enemy, new GridPos(1, 1), TileEffectType.Burn, 3);
+        ProcessEvents(burnEffectEvents);
+
+        var attackUpEffectEvents = _sim.TrySpawnTileEffect(_state, TargetSide.Ally, new GridPos(0, 0), TileEffectType.AttackUp, 2);
+        ProcessEvents(attackUpEffectEvents);
+
         var startEvents = _sim.StartBattle(_state);
         ProcessEvents(startEvents);
     }
@@ -145,6 +151,26 @@ public partial class BattleManager : Node
                     var nextEvents = _sim.EndTurn(_state, unit.Id);
                     
                     ProcessEvents(nextEvents);
+                }
+            }
+            else if (evt is TileEffectSpawnedEvent tileEffect)
+            {
+                GD.Print($"Tile effect spawned: {tileEffect.EffectType} at {tileEffect.Pos.Rank},{tileEffect.Pos.Lane} for side {tileEffect.Side}");
+
+                GridView grid;
+                if (tileEffect.Side == TargetSide.Ally)
+                {
+                    grid = PlayerGrid;
+                }
+                else
+                {
+                    grid = EnemyGrid;
+                }
+
+                BattleTile tile = grid.GetTile(tileEffect.Pos);
+                if (tile != null)
+                {
+                    tile.SetEffect(tileEffect.EffectType);
                 }
             }
             else if (evt is TurnEndedEvent turnEnded)

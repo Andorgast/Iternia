@@ -67,4 +67,13 @@ public partial class GridView : Node2D
         
         return new Vector2(x, y);
     }
+
+    public BattleTile GetTile(GridPos pos)
+    {
+        if (_tiles.TryGetValue(pos, out BattleTile tile))
+        {
+            return tile;
+        }
+        return null;
+    }
 }

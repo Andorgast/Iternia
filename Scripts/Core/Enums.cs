@@ -7,3 +7,10 @@ public enum TargetSide
     Enemy
 }
 
+public enum TileEffectType
+{
+    Burn,
+    AttackUp,
+    AttackDown,
+    None,
+}

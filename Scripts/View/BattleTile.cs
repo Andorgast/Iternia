@@ -15,6 +15,8 @@ public partial class BattleTile : Area2D
     private bool _isHighlighted;
     private bool _isHovered;
 
+    private TileEffectType _currentEffect = TileEffectType.None;
+
     public override void _Ready()
     {
         _sprite = GetNode<Sprite2D>("Sprite2D");
@@ -73,10 +75,34 @@ public partial class BattleTile : Area2D
         {
             _sprite.Modulate = HighlightColor;
         }
+        else if (_currentEffect != TileEffectType.None)
+        {
+            switch (_currentEffect)
+            {
+                case TileEffectType.Burn:
+                    _sprite.Modulate = Colors.OrangeRed;
+                    break;
+                case TileEffectType.AttackUp:
+                    _sprite.Modulate = Colors.Blue;
+                    break;
+                case TileEffectType.AttackDown:
+                    _sprite.Modulate = Colors.Purple;
+                    break;
+                default:
+                    _sprite.Modulate = NormalColor;
+                    break;
+            }
+        }
         else
         {
             _sprite.Modulate = NormalColor;
         }
+    }
+
+    public void SetEffect(TileEffectType effectType)
+    {
+        _currentEffect = effectType;
+        UpdateVisuals();
     }
 }
 

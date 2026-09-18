@@ -9,6 +9,7 @@ public class Unit
     public int Hp { get; set; }
     public int MaxHp { get; set; }
     public int Speed { get; set; }
+    
 
     public Unit(string id, string name, TargetSide side, int maxHp, int speed)
     {

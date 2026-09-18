@@ -37,6 +37,17 @@ public class BattleSim
         return events;
     }
 
+    public IReadOnlyList<BattleEvent> TrySpawnTileEffect(BattleState state, TargetSide side, GridPos pos, TileEffectType effectType, int durationInTurns)
+    {
+        var events = new List<BattleEvent>();
+
+        state.ActiveTileEffects.Add(new TileEffect(side, pos, effectType, durationInTurns));
+
+        events.Add(new TileEffectSpawnedEvent(side, pos, effectType));
+
+        return events;
+    }
+
     public IReadOnlyList<BattleEvent> EndTurn(BattleState state, string unitId)
     {
         var events = new List<BattleEvent>();

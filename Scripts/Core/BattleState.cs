@@ -10,4 +10,5 @@ public class BattleState
     public TurnBudget CurrentTurnBudget { get; } = new();
     public string ActiveUnitId { get; set; }
     public Queue<string> TurnQueue { get; } = new();
+    public List<TileEffect> ActiveTileEffects { get; } = new();
 }
