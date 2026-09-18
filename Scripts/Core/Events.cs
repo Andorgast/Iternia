@@ -1,0 +1,8 @@
+namespace Iternia.Scripts.Core;
+
+public abstract record BattleEvent;
+
+public record UnitMovedEvent(string UnitId, GridPos From, GridPos To) : BattleEvent;
+public record TurnEndedEvent(string UnitId) : BattleEvent;
+public record TurnStartedEvent(string UnitId) : BattleEvent;
+public record CommandFailedEvent(string Reason) : BattleEvent;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Iternia.Core;
+namespace Iternia.Scripts.Core;
 
 public class TileMask
 {

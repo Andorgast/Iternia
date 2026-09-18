@@ -1,5 +1,5 @@
 using Godot;
-using Iternia.Core;
+using Iternia.Scripts.Core;
 
 namespace Iternia.View;
 
@@ -34,6 +34,19 @@ public partial class BattleTile : Area2D
     {
         _isHighlighted = active;
         UpdateVisuals();
+    }
+
+    public event System.Action<GridPos> TileClicked;
+
+    public override void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)
+    {
+        if (@event is InputEventMouseButton mouseBtn)
+        {
+            if (mouseBtn.ButtonIndex == MouseButton.Left && mouseBtn.Pressed)
+            {
+                TileClicked?.Invoke(LogicalPos);
+            }
+        }
     }
 
     private void OnMouseEntered()

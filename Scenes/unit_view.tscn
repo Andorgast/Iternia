@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://caloj1bhbytom"]
+
+[ext_resource type="Script" uid="uid://canbja4funfg2" path="res://Scripts/View/UnitView.cs" id="1_ihntd"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ix2id"]
+size = Vector2(20, 20)
+
+[node name="UnitView" type="Sprite2D" unique_id=2099433732]
+texture = SubResource("PlaceholderTexture2D_ix2id")
+script = ExtResource("1_ihntd")
