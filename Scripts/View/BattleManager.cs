@@ -25,9 +25,9 @@ public partial class BattleManager : Node
         if (PlayerGrid != null) PlayerGrid.OnTileClicked += HandleTileClicked;
         if (EnemyGrid != null) EnemyGrid.OnTileClicked += HandleTileClicked;
 
-        SpawnTestUnit("player_1", TargetSide.Ally, new GridPos(1, 1), 12);
-        SpawnTestUnit("player_2", TargetSide.Ally, new GridPos(2, 1), 11);
-        SpawnTestUnit("enemy_1", TargetSide.Enemy, new GridPos(0, 1), 10);
+        SpawnTestUnit("player_1", 1, TargetSide.Ally, new GridPos(1, 1), 12,1, 1);
+        SpawnTestUnit("player_2", 1,TargetSide.Ally, new GridPos(2, 1), 11, 1, 1);
+        SpawnTestUnit("enemy_1", 1,TargetSide.Enemy, new GridPos(0, 1), 10, 1, 1);
 
         var startEvents = _sim.StartBattle(_state);
         ProcessEvents(startEvents);
@@ -48,9 +48,9 @@ public partial class BattleManager : Node
         }
     }
 
-    private void SpawnTestUnit(string id, TargetSide side, GridPos pos, int speed)
+    private void SpawnTestUnit(string id, int attack, TargetSide side, GridPos pos, int speed, int movement, int actionPoints)
     {
-        var unit = new Unit(id, id, side, 20, speed);
+        var unit = new Unit(id, "testUnit", attack, side, 20, speed, movement, actionPoints, [], [], []);
         _state.AllUnits[id] = unit;
 
         Formation formation;
@@ -120,7 +120,7 @@ public partial class BattleManager : Node
             }
             else if (evt is UnitMovedEvent moved)
             {
-                GD.Print($"SUCCES! Unit {moved.UnitId} moved to {moved.To.Rank},{moved.To.Lane}");
+                GD.Print($"SUCCESS! Unit {moved.UnitId} moved to {moved.To.Rank},{moved.To.Lane}");
                 
                 if (_unitViews.TryGetValue(moved.UnitId, out var view))
                 {

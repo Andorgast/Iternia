@@ -7,3 +7,12 @@ public enum TargetSide
     Enemy
 }
 
+public enum Element
+{
+    Fire,
+    Water,
+    Plant,
+    Ice,
+    Physical,
+    Dark
+}
