@@ -36,6 +36,19 @@ public partial class BattleTile : Area2D
         UpdateVisuals();
     }
 
+    public event System.Action<GridPos> TileClicked;
+
+    public override void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)
+    {
+        if (@event is InputEventMouseButton mouseBtn)
+        {
+            if (mouseBtn.ButtonIndex == MouseButton.Left && mouseBtn.Pressed)
+            {
+                TileClicked?.Invoke(LogicalPos);
+            }
+        }
+    }
+
     private void OnMouseEntered()
     {
         _isHovered = true;

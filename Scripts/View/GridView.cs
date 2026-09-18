@@ -13,17 +13,16 @@ public partial class GridView : Node2D
 
     private readonly Dictionary<GridPos, BattleTile> _tiles = new();
     
-    private TileMask _testMask;
+    public event System.Action<TargetSide, GridPos> OnTileClicked;
 
     public override void _Ready()
     {
-        _testMask = TileMask.Parse(
-            "X../" +
-            "XX./" +
-            "X.."
-        );
-
         GenerateGrid();
+    }
+
+    public Vector2 GetTileScreenPos(GridPos pos)
+    {
+        return GridToScreen(pos);
     }
 
     private void GenerateGrid()
@@ -46,8 +45,8 @@ public partial class GridView : Node2D
                 AddChild(tile); 
                 
                 tile.Setup(pos, screenPos);
-                
-                tile.SetHighlight(_testMask.HasPos(pos));
+
+                tile.TileClicked += (clickedPos) => OnTileClicked?.Invoke(Side, clickedPos);
 
                 _tiles[pos] = tile;
             }

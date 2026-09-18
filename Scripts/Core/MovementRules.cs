@@ -6,6 +6,11 @@ public static class MovementRules
 {
     public static bool CanMove(BattleState state, string unitId, GridPos targetPos)
     {
+        if (state.ActiveUnitId != null && state.ActiveUnitId != unitId)
+        {
+            return false;
+        }
+
         if (state.CurrentTurnBudget.MoveSteps <= 0 && !state.CurrentTurnBudget.MainAction)
         {
             return false;

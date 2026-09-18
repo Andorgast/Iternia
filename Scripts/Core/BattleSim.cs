@@ -11,64 +11,42 @@ public class BattleSim
         _turnOrder = turnOrder;
     }
 
-    public ValidationResult Validate(BattleState state, BattleCommand cmd)
-    {
-        switch (cmd)
-        {
-            case MoveCommand moveCmd:
-                if (!MovementRules.CanMove(state, moveCmd.UnitId, moveCmd.TargetPos))
-                {
-                    return new ValidationResult(false, "Invalid move: destination occupied, out of bounds, or out of moves.");
-                }
-                return new ValidationResult(true);
-
-            case EndTurnCommand endTurnCmd:
-                return new ValidationResult(true);
-
-            default:
-                return new ValidationResult(false, "Unknown command.");
-        }
-    }
-
-    public IReadOnlyList<BattleEvent> Execute(BattleState state, BattleCommand cmd)
+    public IReadOnlyList<BattleEvent> StartBattle(BattleState state)
     {
         var events = new List<BattleEvent>();
-        
-        var validation = Validate(state, cmd);
-        if (!validation.IsValid)
-        {
-            events.Add(new CommandFailedEvent(validation.ErrorMessage));
-            return events;
-        }
-
-        switch (cmd)
-        {
-            case MoveCommand moveCmd:
-                ExecuteMove(state, moveCmd, events);
-                break;
-
-            case EndTurnCommand endTurnCmd:
-                ExecuteEndTurn(state, endTurnCmd, events);
-                break;
-        }
-
+        AdvanceTurn(state, events);
         return events;
     }
 
-    private void ExecuteMove(BattleState state, MoveCommand cmd, List<BattleEvent> events)
+    public IReadOnlyList<BattleEvent> TryMove(BattleState state, string unitId, GridPos targetPos)
     {
-        MovementRules.TryFindUnitPosition(state, cmd.UnitId, out Formation formation, out GridPos currentPos);
-        
-        formation.MoveUnit(currentPos, cmd.TargetPos);
+        var events = new List<BattleEvent>();
+
+        if (!MovementRules.CanMove(state, unitId, targetPos))
+        {
+            events.Add(new CommandFailedEvent("Invalid move: destination occupied, out of bounds, or out of moves."));
+            return events;
+        }
+
+        MovementRules.TryFindUnitPosition(state, unitId, out Formation formation, out GridPos currentPos);
+        formation.MoveUnit(currentPos, targetPos);
         state.CurrentTurnBudget.SpendMove();
 
-        events.Add(new UnitMovedEvent(cmd.UnitId, currentPos, cmd.TargetPos));
+        events.Add(new UnitMovedEvent(unitId, currentPos, targetPos));
+        
+        return events;
     }
 
-    private void ExecuteEndTurn(BattleState state, EndTurnCommand cmd, List<BattleEvent> events)
+    public IReadOnlyList<BattleEvent> EndTurn(BattleState state, string unitId)
     {
-        events.Add(new TurnEndedEvent(cmd.UnitId));
-        
+        var events = new List<BattleEvent>();
+        events.Add(new TurnEndedEvent(unitId));
+        AdvanceTurn(state, events);
+        return events;
+    }
+
+    private void AdvanceTurn(BattleState state, List<BattleEvent> events)
+    {
         if (state.TurnQueue.Count == 0)
         {
             var newOrder = _turnOrder.CalculateRoundOrder(state);
