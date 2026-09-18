@@ -1,6 +1,8 @@
 using Godot;
 using System.Collections.Generic;
+using Iternia.Scripts.Characters;
 using Iternia.Scripts.Core;
+using Iternia.Scripts.Models;
 using Iternia.View;
 
 namespace Iternia.Manager;
@@ -25,9 +27,9 @@ public partial class BattleManager : Node
         if (PlayerGrid != null) PlayerGrid.OnTileClicked += HandleTileClicked;
         if (EnemyGrid != null) EnemyGrid.OnTileClicked += HandleTileClicked;
 
-        SpawnTestUnit("player_1", 1, TargetSide.Ally, new GridPos(1, 1), 12,1, 1);
-        SpawnTestUnit("player_2", 1,TargetSide.Ally, new GridPos(2, 1), 11, 1, 1);
-        SpawnTestUnit("enemy_1", 1,TargetSide.Enemy, new GridPos(0, 1), 10, 1, 1);
+        SpawnTestUnit("player_1", 1, TargetSide.Ally, new GridPos(1, 1), 12);
+        SpawnTestUnit("player_2", 1,TargetSide.Ally, new GridPos(2, 1), 11);
+        SpawnTestUnit("enemy_1", 1,TargetSide.Enemy, new GridPos(0, 1), 10);
 
         var startEvents = _sim.StartBattle(_state);
         ProcessEvents(startEvents);
@@ -48,9 +50,9 @@ public partial class BattleManager : Node
         }
     }
 
-    private void SpawnTestUnit(string id, int attack, TargetSide side, GridPos pos, int speed, int movement, int actionPoints)
+    private void SpawnTestUnit(string id, int attack, TargetSide side, GridPos pos, int speed)
     {
-        var unit = new Unit(id, "testUnit", attack, side, 20, speed, movement, actionPoints, [], [], []);
+        Unit unit = new TestUnit(id, side, speed);
         _state.AllUnits[id] = unit;
 
         Formation formation;

@@ -1,33 +1,36 @@
 using System.Collections.Generic;
-using Iternia.Scripts.Models;
+using Iternia.Scripts.Core;
 
-namespace Iternia.Scripts.Core;
+namespace Iternia.Scripts.Models;
 
-public class Unit(string id, string name, int attack, TargetSide side, int maxHp, int maxSpeed, int maxMovement, int maxActionPoints, List<Action> actions, List<Element> resistances, List<Element> weaknesses )
+public class Unit
 {
-    public string Id { get; init; } = id;
-    public string Name { get; init; } = name;
-    public int Attack { get; set; } = attack;
-    public TargetSide Side { get; set; } = side;
-    public int Hp { get; private set; } = maxHp;
-    public int MaxHp { get; set; } = maxHp;
-    public int Speed { get; set; } = maxSpeed;
-    public int MaxSpeed { get; set; } = maxSpeed;
+    public virtual string Id { get; init; }
+    public virtual string Name { get; init; }
+    public virtual TargetSide Side { get; set; }
+    public virtual int DefaultAttack { get; set; } = 1;
+    public virtual int Attack { get; set; }
+    public virtual int Hp { get; set; }
+    public virtual int MaxHp { get; set; }
+    public virtual int Speed { get; set; }
+    public virtual int DefaultSpeed { get; set; }
     //Speed is where in the turn order a unit is
-    public int Movement { get; set; } = maxMovement;
-    public int MaxMovement { get; set; } = maxMovement;
+    public virtual int Movement { get; set; }
+    public virtual int DefaultMovement { get; set; }
     //Movement is how many times the unit can move without using action points
-    public int ActionPoints { get; set; } = maxActionPoints;
-    public int MaxActionPoints { get; set; } = maxActionPoints;
+    public virtual int ActionPoints { get; set; }
+    public virtual int DefaultActionPoints { get; set; }
     //Action points is the amount of things a unit can do something in a turn
-    public List<Action> Actions { get; init; } = actions;
-    public List<Element> Resistances { get; set; } = resistances;
-    public List<Element> Weaknesses { get; set; } = weaknesses;
-
-    public void TakeDamage(int damageToTake, Element attackType)
+    public virtual float Aggro { get; set; }
+    public virtual float DefaultAggro { get; set; }
+    public virtual List<Action> Actions { get; init; }
+    public virtual List<Element> Resistances { get; set; }
+    public virtual List<Element> Weaknesses { get; set; }
+    public int TakeDamage(int damageToTake, Element attackType)
     {
         if (Resistances.Contains(attackType)) Hp -= damageToTake / 1;
         else if (Weaknesses.Contains(attackType)) Hp -= damageToTake * 1;
+        return Hp;
     }
 }
 
