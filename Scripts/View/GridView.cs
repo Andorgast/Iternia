@@ -55,15 +55,15 @@ public partial class GridView : Node2D
 
     private Vector2 GridToScreen(GridPos pos)
     {
-        int xIndex = pos.Rank;
+        int xIndex = pos.row;
         
         if (Side == TargetSide.Ally)
         {
-            xIndex = 2 - pos.Rank;
+            xIndex = 2 - pos.row;
         }
 
         float x = xIndex * (TileSize + Spacing);
-        float y = pos.Lane * (TileSize + Spacing);
+        float y = pos.collum * (TileSize + Spacing);
         
         return new Vector2(x, y);
     }

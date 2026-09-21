@@ -21,13 +21,13 @@ public static class MovementRules
             return false;
         }
 
-        if (targetPos.Rank < 0 || targetPos.Rank > 2 || targetPos.Lane < 0 || targetPos.Lane > 2)
+        if (targetPos.row < 0 || targetPos.row > 2 || targetPos.collum < 0 || targetPos.collum > 2)
         {
             return false;
         }
 
-        int rankDiff = Math.Abs(currentPos.Rank - targetPos.Rank);
-        int laneDiff = Math.Abs(currentPos.Lane - targetPos.Lane);
+        int rankDiff = Math.Abs(currentPos.row - targetPos.row);
+        int laneDiff = Math.Abs(currentPos.collum - targetPos.collum);
         if ((rankDiff == 1 && laneDiff == 0) || (rankDiff == 0 && laneDiff == 1))
         {
             if (formation.GetUnitAt(targetPos) != null)

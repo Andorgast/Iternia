@@ -1,13 +1,11 @@
 using Godot;
-using Iternia.Scripts.Characters;
-using Iternia.Scripts.Models;
 
 namespace Iternia.View;
 
 public partial class UnitView : Sprite2D
 {
     public string UnitId { get; private set; }
-    [Export] public Unit Unit { get; init; } = new Aster("test_player");
+    
 
     public void Setup(string unitId, Vector2 startScreenPos)
     {
