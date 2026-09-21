@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://dgmnk4s2be8al"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_jpyox"]
+
+[resource]
+script = ExtResource("1_jpyox")
+Name = "Summon bird"
+InitialOriginSquares = Basis(0, 0, 1.1, 0, 1.1, 1.1, 0, 0, 1.1)
+InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 1.1, 0, 1.1, 1.1, 0)
+TargetType = 2
+ActionElement = 1
+Damage = -2
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

@@ -5,6 +5,7 @@ namespace Iternia.View;
 public partial class UnitView : Sprite2D
 {
     public string UnitId { get; private set; }
+    
 
     public void Setup(string unitId, Vector2 startScreenPos)
     {

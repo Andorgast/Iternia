@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://b2lbhgesbxgqy"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_2whj2"]
+
+[resource]
+script = ExtResource("1_2whj2")
+Name = "Darkness"
+InitialOriginSquares = Basis(0, 1.1, 0, 0, 0, 1.1, 0, 1.1, 0)
+InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 1.1, 0, 1.1, 0, 0)
+TargetType = 2
+ActionElement = 5
+TargetSide = 1
+StatToChange = 5
+StatChangeAmount = 1.0
+SecondaryStatToChange = 3
+SecondaryStatChangeAmount = 3.0
+Damage = 1
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

@@ -25,9 +25,9 @@ public partial class BattleManager : Node
         if (PlayerGrid != null) PlayerGrid.OnTileClicked += HandleTileClicked;
         if (EnemyGrid != null) EnemyGrid.OnTileClicked += HandleTileClicked;
 
-        SpawnTestUnit("player_1", TargetSide.Ally, new GridPos(1, 1), 12);
-        SpawnTestUnit("player_2", TargetSide.Ally, new GridPos(2, 1), 11);
-        SpawnTestUnit("enemy_1", TargetSide.Enemy, new GridPos(0, 1), 10);
+        // SpawnTestUnit("player_1", 1, TargetSide.Ally, new GridPos(1, 1), 12);
+        // SpawnTestUnit("player_2", 1,TargetSide.Ally, new GridPos(2, 1), 11);
+        // SpawnTestUnit("enemy_1", 1,TargetSide.Enemy, new GridPos(0, 1), 10);
 
         var startEvents = _sim.StartBattle(_state);
         ProcessEvents(startEvents);
@@ -48,47 +48,47 @@ public partial class BattleManager : Node
         }
     }
 
-    private void SpawnTestUnit(string id, TargetSide side, GridPos pos, int speed)
-    {
-        var unit = new Unit(id, id, side, 20, speed);
-        _state.AllUnits[id] = unit;
-
-        Formation formation;
-        if (side == TargetSide.Ally)
-        {
-            formation = _state.PlayerFormation;
-        }
-        else
-        {
-            formation = _state.EnemyFormation;
-        }
-        formation.PlaceUnit(id, pos);
-
-        if (UnitViewScene != null)
-        {
-            var view = UnitViewScene.Instantiate<UnitView>();
-            AddChild(view);
-            
-            GridView grid;
-            if (side == TargetSide.Ally)
-            {
-                grid = PlayerGrid;
-            }
-            else
-            {
-                grid = EnemyGrid;
-            }
-            
-            Vector2 screenPos = grid.Position + grid.GetTileScreenPos(pos);
-            
-            view.Setup(id, screenPos);
-            _unitViews[id] = view;
-        }
-    }
+    // private void SpawnTestUnit(string id, int attack, TargetSide side, GridPos pos, int speed)
+    // {
+    //     Unit unit = new TestUnit(id, side, speed);
+    //     _state.AllUnits[id] = unit;
+    //
+    //     Formation formation;
+    //     if (side == TargetSide.Ally)
+    //     {
+    //         formation = _state.PlayerFormation;
+    //     }
+    //     else
+    //     {
+    //         formation = _state.EnemyFormation;
+    //     }
+    //     formation.PlaceUnit(id, pos);
+    //
+    //     if (UnitViewScene != null)
+    //     {
+    //         var view = UnitViewScene.Instantiate<UnitView>();
+    //         AddChild(view);
+    //         
+    //         GridView grid;
+    //         if (side == TargetSide.Ally)
+    //         {
+    //             grid = PlayerGrid;
+    //         }
+    //         else
+    //         {
+    //             grid = EnemyGrid;
+    //         }
+    //         
+    //         Vector2 screenPos = grid.Position + grid.GetTileScreenPos(pos);
+    //         
+    //         view.Setup(id, screenPos);
+    //         _unitViews[id] = view;
+    //     }
+    // }
 
     private void HandleTileClicked(TargetSide clickedSide, GridPos clickedPos)
     {
-        GD.Print($"side: {clickedSide} position: {clickedPos.Rank}, {clickedPos.Lane}");
+        GD.Print($"side: {clickedSide} position: {clickedPos.row}, {clickedPos.collum}");
 
         if (string.IsNullOrEmpty(_state.ActiveUnitId)) return;
         if (!_state.AllUnits.TryGetValue(_state.ActiveUnitId, out var activeUnit)) return;
@@ -120,7 +120,7 @@ public partial class BattleManager : Node
             }
             else if (evt is UnitMovedEvent moved)
             {
-                GD.Print($"SUCCES! Unit {moved.UnitId} moved to {moved.To.Rank},{moved.To.Lane}");
+                GD.Print($"SUCCESS! Unit {moved.UnitId} moved to {moved.To.row},{moved.To.collum}");
                 
                 if (_unitViews.TryGetValue(moved.UnitId, out var view))
                 {

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://cyfsdm11ne6dd"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_pobh2"]
+
+[resource]
+script = ExtResource("1_pobh2")
+Name = "Rapier"
+InitialOriginSquares = Basis(1.1, 1.1, 0, 1.1, 0, 0, 1.1, 1.1, 0)
+InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 0, 0, 1.1, 0, 0)
+ActionElement = 4
+TargetSide = 1
+Damage = 4
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

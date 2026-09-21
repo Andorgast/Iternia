@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://cd3e2arr1fe07"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_0xj7y"]
+
+[resource]
+script = ExtResource("1_0xj7y")
+Name = "Eric"
+Actions = null
+Resistances = null
+Weaknesses = null
+InitialAttack = 2
+InitialHp = 10
+InitialMovement = 2
+InitialActionPoints = 1
+InitialSpeed = 20
+InitialAggro = 1.0
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"

@@ -15,7 +15,7 @@ public class Formation
 
     public bool PlaceUnit(string unitId, GridPos pos)
     {
-        if (pos.Rank < 0 || pos.Rank > 2 || pos.Lane < 0 || pos.Lane > 2)
+        if (pos.row < 0 || pos.row > 2 || pos.collum < 0 || pos.collum > 2)
             return false;
             
         if (_slots.ContainsKey(pos))
