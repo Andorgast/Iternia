@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://ctykd3xytsr1a"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_3r3pl"]
+
+[resource]
+script = ExtResource("1_3r3pl")
+Name = "Blood toss"
+InitialOriginSquares = Basis(0, 0, 0, 0, 1.1, 1.1, 0, 0, 0)
+InitialTargetSquares = Basis(0, 1.1, 1.1, 1.1, 0, 1.1, 0, 1.1, 1.1)
+ActionElement = 5
+TargetSide = 1
+Damage = 12
+SecondaryDamage = 4
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

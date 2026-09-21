@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://divwvjwt5vn75"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_0mvul"]
+
+[resource]
+script = ExtResource("1_0mvul")
+Name = "Elaena"
+Actions = null
+Resistances = Array[int]([0, 3, 2])
+Weaknesses = Array[int]([5])
+InitialAttack = 1
+InitialHp = 18
+InitialMovement = 1
+InitialActionPoints = 1
+InitialSpeed = 13
+InitialAggro = 0.8
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://bpitloy2f8rbf"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_lj2na"]
+
+[resource]
+script = ExtResource("1_lj2na")
+Name = "Faber"
+Actions = null
+Resistances = null
+Weaknesses = null
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"
