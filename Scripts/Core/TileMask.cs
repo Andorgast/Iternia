@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 
 namespace Iternia.Scripts.Core;
 
@@ -34,6 +35,21 @@ public class TileMask
             }
         }
         
+        return new TileMask(positions);
+    }
+    
+    public static TileMask Parse(Basis mask)
+    {
+        List<GridPos> positions = [];
+        if (mask.Row0.X != 0) positions.Add(new GridPos(0,0));
+        if (mask.Row1.X != 0) positions.Add(new GridPos(1,0));
+        if (mask.Row2.X != 0) positions.Add(new GridPos(2,0));
+        if (mask.Row0.Y != 0) positions.Add(new GridPos(0,1));
+        if (mask.Row1.Y != 0) positions.Add(new GridPos(1,1));
+        if (mask.Row2.Y != 0) positions.Add(new GridPos(2,1));
+        if (mask.Row0.Z != 0) positions.Add(new GridPos(0,2));
+        if (mask.Row1.Z != 0) positions.Add(new GridPos(1,2));
+        if (mask.Row2.Z != 0) positions.Add(new GridPos(2,2));
         return new TileMask(positions);
     }
 
