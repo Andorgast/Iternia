@@ -25,6 +25,26 @@ public partial class GridView : Node2D
         return GridToScreen(pos);
     }
 
+    public void ClearHighlights()
+    {
+        foreach (var tile in _tiles.Values)
+        {
+            tile.SetHighlight(false);
+        }
+    }
+
+    public void HighlightTiles(IEnumerable<GridPos> positions)
+    {
+        ClearHighlights();
+        foreach (var pos in positions)
+        {
+            if (_tiles.TryGetValue(pos, out var tile))
+            {
+                tile.SetHighlight(true);
+            }
+        }
+    }
+
     private void GenerateGrid()
     {
         if (TileScene == null)

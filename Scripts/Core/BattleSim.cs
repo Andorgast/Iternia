@@ -59,11 +59,18 @@ public class BattleSim
         if (state.TurnQueue.Count > 0)
         {
             string nextUnitId = state.TurnQueue.Dequeue(); 
-            
             state.ActiveUnitId = nextUnitId;
-            state.CurrentTurnBudget.Reset();
+
+            if (state.AllUnits.TryGetValue(nextUnitId, out var activeUnit))
+            {
+                state.CurrentTurnBudget.Reset(activeUnit);
+            }
             
             events.Add(new TurnStartedEvent(nextUnitId));
+        }
+        else
+        {
+            state.ActiveUnitId = null;
         }
     }
 }

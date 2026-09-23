@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Iternia.Scripts.Core;
 
@@ -11,7 +12,7 @@ public static class MovementRules
             return false;
         }
 
-        if (state.CurrentTurnBudget.MoveSteps <= 0 && !state.CurrentTurnBudget.MainAction)
+        if (state.CurrentTurnBudget.MoveSteps <= 0 && state.CurrentTurnBudget.ActionPoints <= 0)
         {
             return false;
         }
@@ -66,6 +67,23 @@ public static class MovementRules
         outFormation = null;
         outPos = default;
         return false;
+    }
+
+    public static List<GridPos> GetValidMoves(BattleState state, string unitId)
+    {
+        var validMoves = new List<GridPos>();
+        for (int rank = 0; rank < 3; rank++)
+        {
+            for (int lane = 0; lane < 3; lane++)
+            {
+                var target = new GridPos(rank, lane);
+                if (CanMove(state, unitId, target))
+                {
+                    validMoves.Add(target);
+                }
+            }
+        }
+        return validMoves;
     }
 }
 

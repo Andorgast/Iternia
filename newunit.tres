@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://0ng1m2pbu7xu"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_530xd"]
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_h6521"]
+
+[resource]
+script = ExtResource("1_530xd")
+Actions = Array[ExtResource("1_h6521")]([null])
+Resistances = Array[int]([0, 0])
+Weaknesses = null
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"
