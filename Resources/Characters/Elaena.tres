@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_0mvul")
+Id = "Elaena"
 Name = "Elaena"
 Actions = null
 Resistances = Array[int]([0, 3, 2])

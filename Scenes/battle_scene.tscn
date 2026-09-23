@@ -2,14 +2,20 @@
 
 [ext_resource type="Script" uid="uid://bu8ujiyja18y3" path="res://Scripts/View/BattleManager.cs" id="1_e5vbs"]
 [ext_resource type="PackedScene" uid="uid://caloj1bhbytom" path="res://Scenes/unit_view.tscn" id="2_3gnqe"]
+[ext_resource type="Resource" uid="uid://baxeffxwsupoe" path="res://Resources/Characters/Frederic.tres" id="3_20f6w"]
 [ext_resource type="Script" uid="uid://dnmlre5q5vd8k" path="res://Scripts/View/GridView.cs" id="3_gt16y"]
 [ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
+[ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="4_w4764"]
+[ext_resource type="Resource" uid="uid://cd3e2arr1fe07" path="res://Resources/Characters/Eric.tres" id="5_ed262"]
 
 [node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid")]
 script = ExtResource("1_e5vbs")
 PlayerGrid = NodePath("PlayerGrid")
 EnemyGrid = NodePath("EnemyGrid")
 UnitViewScene = ExtResource("2_3gnqe")
+Player1Resource = ExtResource("3_20f6w")
+Player2Resource = ExtResource("4_w4764")
+EnemyResource = ExtResource("5_ed262")
 
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
 position = Vector2(151, 290)
@@ -19,5 +25,5 @@ TileScene = ExtResource("4_20f6w")
 [node name="EnemyGrid" type="Node2D" parent="." unique_id=664863384]
 position = Vector2(727, 273)
 script = ExtResource("3_gt16y")
-Side = 2
+Side = 1
 TileScene = ExtResource("4_20f6w")

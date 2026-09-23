@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Godot;
 using Iternia.Scripts.Core;
 
@@ -20,13 +20,11 @@ public partial class Action : Resource
     [Export] public float SecondaryStatChangeAmount;
     [Export] public int Damage;
     [Export] public int SecondaryDamage;
-    public TileMask OriginSquares;
-    public TileMask TargetSquares;
+    public TileMask OriginSquares => TileMask.Parse(InitialOriginSquares);
+    public TileMask TargetSquares => TileMask.Parse(InitialTargetSquares);
 
     public Action()
     {
-        OriginSquares = TileMask.Parse(InitialOriginSquares);
-        TargetSquares = TileMask.Parse(InitialTargetSquares);
     }
     
     public void ExecuteAction(List<GridPos> tileTargets, List<string> mainTargetIds, List<string> secondaryTargetIds, int attackStat)

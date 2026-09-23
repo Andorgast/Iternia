@@ -1,14 +1,16 @@
+using Iternia.Scripts.Models;
+
 namespace Iternia.Scripts.Core;
 
 public class TurnBudget
 {
     public int MoveSteps { get; set; }
-    public bool MainAction { get; set; }
+    public int ActionPoints { get; set; }
 
-    public void Reset()
+    public void Reset(Unit activeUnit)
     {
-        MoveSteps = 1;
-        MainAction = true;
+        MoveSteps = activeUnit.Movement;
+        ActionPoints = activeUnit.ActionPoints;
     }
 
     public bool SpendMove()
@@ -19,9 +21,9 @@ public class TurnBudget
             return true;
         }
         
-        if (MainAction)
+        if (ActionPoints > 0)
         {
-            MainAction = false;
+            ActionPoints--;
             return true;
         }
 
@@ -30,9 +32,9 @@ public class TurnBudget
     
     public bool SpendMainAction()
     {
-        if (MainAction)
+        if (ActionPoints > 0)
         {
-            MainAction = false;
+            ActionPoints--;
             return true;
         }
         return false;

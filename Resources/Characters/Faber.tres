@@ -4,7 +4,9 @@
 
 [resource]
 script = ExtResource("1_lj2na")
+Id = "Faber"
 Name = "Faber"
+Side = 1
 Actions = null
 Resistances = null
 Weaknesses = null
