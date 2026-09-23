@@ -1,9 +1,12 @@
 using Godot;
 using System.Collections.Generic;
+using Godot.Collections;
 using Iternia.Scripts.Core;
 using Iternia.View;
 
 using Iternia.Scripts.Models;
+using Iternia.Scripts.View;
+using Action = System.Action;
 
 namespace Iternia.Manager;
 
@@ -16,10 +19,13 @@ public partial class BattleManager : Node
     [Export] public Unit Player2Resource { get; set; }
     [Export] public Unit EnemyResource { get; set; }
 
+    [Export] public ButtonManager ButtonManager;
+
     private BattleState _state;
     private BattleSim _sim;
+    private TargetType _attackTarget = TargetType.None;
     
-    private readonly Dictionary<string, UnitView> _unitViews = new();
+    private readonly System.Collections.Generic.Dictionary<string, UnitView> _unitViews = new();
 
     public override void _Ready()
     {
@@ -101,6 +107,11 @@ public partial class BattleManager : Node
         ProcessEvents(events);
     }
 
+    private void HandleActionPressed()
+    {
+        
+    }
+
     private void ProcessEvents(IReadOnlyList<BattleEvent> events)
     {
         foreach (var evt in events)
@@ -133,6 +144,9 @@ public partial class BattleManager : Node
                 GD.Print($"DEBUG Budget: MoveSteps={_state.CurrentTurnBudget.MoveSteps}, AP={_state.CurrentTurnBudget.ActionPoints}");
 
                 UpdateMovementHighlights();
+                //TODO SPAWN BUTTON
+                ButtonManager.GenerateButtons(_state.AllUnits[turnStarted.UnitId].Actions);
+                GD.Print($"Buttons should have generated, the active unit has the actions: {_state.AllUnits[turnStarted.UnitId].Actions}");
 
                 if (_state.AllUnits.TryGetValue(turnStarted.UnitId, out var unit) && unit.Side == TargetSide.Enemy)
                 {
@@ -146,6 +160,7 @@ public partial class BattleManager : Node
                 GD.Print($"Turn ended for: {turnEnded.UnitId}");
                 PlayerGrid?.ClearHighlights();
                 EnemyGrid?.ClearHighlights();
+                ButtonManager.RemoveButtons();
             }
         }
     }

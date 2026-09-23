@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
 [ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="4_w4764"]
 [ext_resource type="Resource" uid="uid://cd3e2arr1fe07" path="res://Resources/Characters/Eric.tres" id="5_ed262"]
+[ext_resource type="Script" uid="uid://dce6g7e6jeqkk" path="res://Scripts/View/ButtonManager.cs" id="8_w4764"]
+[ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="9_ed262"]
 
 [node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid")]
 script = ExtResource("1_e5vbs")
@@ -27,3 +29,10 @@ position = Vector2(727, 273)
 script = ExtResource("3_gt16y")
 Side = 1
 TileScene = ExtResource("4_20f6w")
+
+[node name="ButtonManager" type="Node2D" parent="." unique_id=370170379]
+position = Vector2(0, 500)
+script = ExtResource("8_w4764")
+_buttonScene = ExtResource("9_ed262")
+_buttonWidth = 128
+_spacing = 20
