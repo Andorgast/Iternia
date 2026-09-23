@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bu8ujiyja18y3" path="res://Scripts/View/BattleManager.cs" id="1_e5vbs"]
 [ext_resource type="PackedScene" uid="uid://caloj1bhbytom" path="res://Scenes/unit_view.tscn" id="2_3gnqe"]
-[ext_resource type="Resource" uid="uid://dabyavin10wi3" path="res://Resources/Characters/Aster.tres" id="3_20f6w"]
+[ext_resource type="Resource" uid="uid://baxeffxwsupoe" path="res://Resources/Characters/Frederic.tres" id="3_20f6w"]
 [ext_resource type="Script" uid="uid://dnmlre5q5vd8k" path="res://Scripts/View/GridView.cs" id="3_gt16y"]
 [ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
 [ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="4_w4764"]

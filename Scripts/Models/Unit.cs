@@ -42,7 +42,7 @@ public partial class Unit : Resource
         else if (Weaknesses.Contains(attackType)) Hp -= damageToTake * 1;
         return Hp;
     }
-    public void InitStats()
+    public void Init()
     {
         Attack = InitialAttack;
         DefaultAttack = InitialAttack;

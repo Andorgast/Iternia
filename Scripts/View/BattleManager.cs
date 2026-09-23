@@ -53,14 +53,17 @@ public partial class BattleManager : Node
         }
     }
 
-    private void SpawnUnitFromResource(Unit resource, TargetSide side, GridPos pos)
+    private void SpawnUnitFromResource(Unit battleUnit, TargetSide side, GridPos pos)
     {
-        if (resource == null) return;
+        if (battleUnit == null) return;
         
-        Unit battleUnit = (Unit)resource.Duplicate();
-        battleUnit.Side = side;
+        battleUnit.Init();
 
-        battleUnit.InitStats(); 
+        GD.Print($"Battle Unit: {battleUnit.Movement}");
+
+
+        // Unit battleUnit = new Unit();
+        // battleUnit.Side = side;
         
         _state.AllUnits[battleUnit.Id] = battleUnit;
         Formation formation = side == TargetSide.Ally ? _state.PlayerFormation : _state.EnemyFormation;
