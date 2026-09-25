@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://cyegxaxi540ob"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_77lb8"]
+[ext_resource type="Resource" uid="uid://cyfsdm11ne6dd" path="res://Resources/Abilities/Rapier.tres" id="1_ac05w"]
+[ext_resource type="Resource" uid="uid://b2lbhgesbxgqy" path="res://Resources/Abilities/Darkness.tres" id="2_frh0w"]
+[ext_resource type="Resource" uid="uid://ctykd3xytsr1a" path="res://Resources/Abilities/BloodToss.tres" id="3_ybvt7"]
+
+[resource]
+script = ExtResource("1_77lb8")
+Id = "Thalia"
+Name = "Thalia"
+Actions = Array[Object]([ExtResource("1_ac05w"), ExtResource("2_frh0w"), ExtResource("3_ybvt7")])
+Resistances = null
+Weaknesses = Array[int]([5, 3])
+InitialAttack = 1
+InitialHp = 15
+InitialMovement = 1
+InitialActionPoints = 1
+InitialSpeed = 10
+InitialAggro = 1.0
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"
