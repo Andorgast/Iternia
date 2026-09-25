@@ -6,7 +6,8 @@
 [ext_resource type="Script" uid="uid://dnmlre5q5vd8k" path="res://Scripts/View/GridView.cs" id="3_gt16y"]
 [ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
 [ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="4_w4764"]
-[ext_resource type="Resource" uid="uid://cd3e2arr1fe07" path="res://Resources/Characters/Eric.tres" id="5_ed262"]
+[ext_resource type="Resource" uid="uid://bhnm1nmvwmwe4" path="res://Resources/Characters/Enemy1.tres" id="5_w4764"]
+[ext_resource type="Resource" uid="uid://103g1ym6pnxb" path="res://Resources/Characters/Enemy2.tres" id="6_ed262"]
 [ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="8_w4764"]
 
 [node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD")]
@@ -16,7 +17,8 @@ EnemyGrid = NodePath("EnemyGrid")
 UnitViewScene = ExtResource("2_3gnqe")
 Player1Resource = ExtResource("3_20f6w")
 Player2Resource = ExtResource("4_w4764")
-EnemyResource = ExtResource("5_ed262")
+Enemy1Resource = ExtResource("5_w4764")
+Enemy2Resource = ExtResource("6_ed262")
 TurnOrderHUD = NodePath("TurnOrderHUD")
 
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]

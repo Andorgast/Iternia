@@ -46,6 +46,23 @@ public class BattleSim
         return events;
     }
 
+    public IReadOnlyList<BattleEvent> ExecuteEnemyTurn(BattleState state, Models.EnemyUnit enemy)
+    {
+        var events = new List<BattleEvent>();
+
+        var target = EnemyAI.PickMoveTarget(state, enemy);
+        if (target.HasValue)
+        {
+            var moveEvents = TryMove(state, enemy.Id, target.Value);
+            foreach (var evt in moveEvents)
+                events.Add(evt);
+        }
+
+        // TODO: ability uitvoeren
+
+        return events;
+    }
+
     private void AdvanceTurn(BattleState state, List<BattleEvent> events)
     {
         if (state.TurnQueue.Count == 0)

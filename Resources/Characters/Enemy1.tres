@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="EnemyUnit" format=3 uid="uid://bhnm1nmvwmwe4"]
+
+[ext_resource type="Script" uid="uid://dsx1jndbgngag" path="res://Scripts/Models/EnemyUnit.cs" id="1_as1oi"]
+
+[resource]
+script = ExtResource("1_as1oi")
+InitialAllowedTiles = Basis(0, 1, 1, 1, 1, 1, 0, 1, 1)
+Id = "Enemy1"
+Name = "Enemy1"
+Side = 1
+Actions = null
+Resistances = null
+Weaknesses = null
+InitialAttack = 10
+InitialActionPoints = 1
+InitialSpeed = 5
+metadata/_custom_type_script = "uid://dsx1jndbgngag"

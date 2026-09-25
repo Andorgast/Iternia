@@ -15,7 +15,8 @@ public partial class BattleManager : Node
     [Export] public PackedScene UnitViewScene { get; set; }
     [Export] public Unit Player1Resource { get; set; }
     [Export] public Unit Player2Resource { get; set; }
-    [Export] public Unit EnemyResource { get; set; }
+    [Export] public EnemyUnit Enemy1Resource { get; set; }
+    [Export] public EnemyUnit Enemy2Resource { get; set; }
     [Export] public TurnOrderHUD TurnOrderHUD{ get; set; }
 
     private BattleState _state;
@@ -34,7 +35,8 @@ public partial class BattleManager : Node
 
         SpawnUnitFromResource(Player1Resource, TargetSide.Ally, new GridPos(1, 1));
         SpawnUnitFromResource(Player2Resource, TargetSide.Ally, new GridPos(2, 1));
-        SpawnUnitFromResource(EnemyResource, TargetSide.Enemy, new GridPos(0, 1));
+        SpawnUnitFromResource(Enemy1Resource, TargetSide.Enemy, new GridPos(0, 1));
+        SpawnUnitFromResource(Enemy2Resource, TargetSide.Enemy, new GridPos(2, 2));
 
         TurnOrderHUD?.Setup(_state.AllUnits);
 
@@ -141,7 +143,13 @@ public partial class BattleManager : Node
 
                 if (_state.AllUnits.TryGetValue(turnStarted.UnitId, out var unit) && unit.Side == TargetSide.Enemy)
                 {
-                    GD.Print($"Enemy {unit.Id} turn skipped automatically.");
+                    if (unit is Iternia.Scripts.Models.EnemyUnit enemyUnit)
+                    {
+                        GD.Print($"Enemy {unit.Id} executing AI turn.");
+                        var aiEvents = _sim.ExecuteEnemyTurn(_state, enemyUnit);
+                        ProcessEvents(aiEvents);
+                    }
+
                     var nextEvents = _sim.EndTurn(_state, unit.Id);
                     ProcessEvents(nextEvents);
                     return;
