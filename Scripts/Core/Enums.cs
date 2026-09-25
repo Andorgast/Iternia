@@ -42,8 +42,22 @@ public enum Stat
 
 public enum TargetType
 {
-    Unit,
-    Aoi,
     Tile,
-    None
+    TileAoi,
+    Ally,
+    AllyAoi,
+    Enemy,
+    EnemyAoi,
+    SelfDamage,
+    SelfDamageAoi,
+    AllyAndEnemy
+}
+
+public enum AllyTargetRange
+{
+    Full,
+    Self,
+    NextToSelf,
+    DefinedByTargetGrid,
+    DoesntTargetAlly
 }

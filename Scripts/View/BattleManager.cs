@@ -76,7 +76,7 @@ public partial class BattleManager : Node
         _state.AllUnits[battleUnit.Id] = battleUnit;
         Formation formation = side == TargetSide.Ally ? _state.PlayerFormation : _state.EnemyFormation;
         bool placed = formation.PlaceUnit(battleUnit.Id, pos);
-        GD.Print($"Spawning '{battleUnit.Id}' on {side} at ({pos.row},{pos.collum}) -> placed={placed}");
+        GD.Print($"Spawning '{battleUnit.Id}' on {side} at ({pos.collum},{pos.row}) -> placed={placed}");
 
         if (UnitViewScene != null)
         {
@@ -93,7 +93,7 @@ public partial class BattleManager : Node
 
     private void HandleTileClicked(TargetSide clickedSide, GridPos clickedPos)
     {
-        GD.Print($"side: {clickedSide} position: {clickedPos.row}, {clickedPos.collum}");
+        GD.Print($"side: {clickedSide} position: {clickedPos.collum}, {clickedPos.row}");
         GD.Print($"  > ActiveUnitId='{_state.ActiveUnitId}'");
 
         if (string.IsNullOrEmpty(_state.ActiveUnitId)) return;
@@ -103,9 +103,61 @@ public partial class BattleManager : Node
 
         if (_currentAction != null)
         {
-            if (_currentAction.TargetSquares.GetPositions().ToList().Contains(clickedPos) && clickedSide == _currentAction.TargetSide)
+            MovementRules.TryFindUnitPosition(_state, _state.ActiveUnitId, out Formation formation, out GridPos pos);
+            if (
+                (
+                    _currentAction.TargetSquares.GetPositions().ToList().Contains(clickedPos) 
+                    ||
+                    _currentAction.AllyTargetRange == AllyTargetRange.Full 
+                    || 
+                    (
+                        _currentAction.AllyTargetRange == AllyTargetRange.Self 
+                        && 
+                        clickedPos == pos
+                    ) 
+                    ||
+                    (
+                        _currentAction.AllyTargetRange == AllyTargetRange.NextToSelf 
+                        && 
+                        (
+                            clickedPos == new GridPos(pos.collum, pos.row + 1) 
+                            || 
+                            clickedPos == new GridPos(pos.collum, pos.row - 1) 
+                            ||
+                            clickedPos == new GridPos(pos.collum + 1, pos.row) 
+                            ||
+                            clickedPos == new GridPos(pos.collum - 1, pos.row)
+                        )
+                    )
+                ) 
+                && 
+                clickedSide == _currentAction.TargetSide 
+                &&
+                _currentAction.OriginSquares.GetPositions().ToList().Contains(pos)
+            )
             {
-                GD.Print("Action execution goes here");
+                switch (_currentAction.TargetType)
+                {
+                    case TargetType.Ally:
+                        break;
+                    case TargetType.AllyAoi:
+                        break;
+                    case TargetType.Tile:
+                        break;
+                    case TargetType.TileAoi:
+                        break;
+                    case TargetType.Enemy:
+                        break;
+                    case TargetType.EnemyAoi:
+                        break;
+                    case TargetType.SelfDamage:
+                        break;
+                    case TargetType.SelfDamageAoi:
+                        break;
+                    case TargetType.AllyAndEnemy:
+                        break;
+                }
+                GD.Print("Action execution should be done here");
                 if (clickedSide == TargetSide.Ally)
                 {
                     PlayerGrid.ClearHighlights();
@@ -124,6 +176,10 @@ public partial class BattleManager : Node
                     var events = _sim.EndTurn(_state, _state.ActiveUnitId);
                     ProcessEvents(events);
                 }
+            }
+            else
+            {
+                GD.PrintErr("Conditions for the attack not met!");
             }
             return;
         }
@@ -182,7 +238,7 @@ public partial class BattleManager : Node
             }
             else if (evt is UnitMovedEvent moved)
             {
-                GD.Print($"SUCCESS! Unit {moved.UnitId} moved to {moved.To.row},{moved.To.collum}");
+                GD.Print($"SUCCESS! Unit {moved.UnitId} moved to {moved.To.collum},{moved.To.row}");
                 
                 if (_unitViews.TryGetValue(moved.UnitId, out var view))
                 {
@@ -216,6 +272,7 @@ public partial class BattleManager : Node
             else if (evt is TurnEndedEvent turnEnded)
             {
                 GD.Print($"Turn ended for: {turnEnded.UnitId}");
+                _currentAction = null;
                 PlayerGrid?.ClearHighlights();
                 EnemyGrid?.ClearHighlights();
                 ButtonManager.RemoveButtons();
