@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Iternia.Scripts.Core;
 
@@ -50,6 +51,7 @@ public class BattleSim
         if (state.TurnQueue.Count == 0)
         {
             var newOrder = _turnOrder.CalculateRoundOrder(state);
+            state.CurrentRoundOrder = newOrder;
             foreach (var id in newOrder)
             {
                 state.TurnQueue.Enqueue(id);
@@ -65,8 +67,10 @@ public class BattleSim
             {
                 state.CurrentTurnBudget.Reset(activeUnit);
             }
-            
+
             events.Add(new TurnStartedEvent(nextUnitId));
+            var remaining = new List<string>(state.TurnQueue);
+            events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, nextUnitId, remaining));
         }
         else
         {

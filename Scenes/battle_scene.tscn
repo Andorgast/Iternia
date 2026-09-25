@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
 [ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="4_w4764"]
 [ext_resource type="Resource" uid="uid://cd3e2arr1fe07" path="res://Resources/Characters/Eric.tres" id="5_ed262"]
+[ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="8_w4764"]
 
-[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid")]
+[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD")]
 script = ExtResource("1_e5vbs")
 PlayerGrid = NodePath("PlayerGrid")
 EnemyGrid = NodePath("EnemyGrid")
@@ -16,6 +17,7 @@ UnitViewScene = ExtResource("2_3gnqe")
 Player1Resource = ExtResource("3_20f6w")
 Player2Resource = ExtResource("4_w4764")
 EnemyResource = ExtResource("5_ed262")
+TurnOrderHUD = NodePath("TurnOrderHUD")
 
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
 position = Vector2(151, 290)
@@ -27,3 +29,11 @@ position = Vector2(727, 273)
 script = ExtResource("3_gt16y")
 Side = 1
 TileScene = ExtResource("4_20f6w")
+
+[node name="TurnOrderHUD" parent="." unique_id=1648753853 instance=ExtResource("8_w4764")]
+offset_left = 533.0
+offset_top = 34.0
+offset_right = 533.0
+offset_bottom = 94.0
+layout_direction = 2
+alignment = 1

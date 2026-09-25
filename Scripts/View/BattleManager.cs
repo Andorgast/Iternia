@@ -4,6 +4,7 @@ using Iternia.Scripts.Core;
 using Iternia.View;
 
 using Iternia.Scripts.Models;
+using Iternia.Scripts.View;
 
 namespace Iternia.Manager;
 
@@ -15,6 +16,7 @@ public partial class BattleManager : Node
     [Export] public Unit Player1Resource { get; set; }
     [Export] public Unit Player2Resource { get; set; }
     [Export] public Unit EnemyResource { get; set; }
+    [Export] public TurnOrderHUD TurnOrderHUD{ get; set; }
 
     private BattleState _state;
     private BattleSim _sim;
@@ -34,8 +36,11 @@ public partial class BattleManager : Node
         SpawnUnitFromResource(Player2Resource, TargetSide.Ally, new GridPos(2, 1));
         SpawnUnitFromResource(EnemyResource, TargetSide.Enemy, new GridPos(0, 1));
 
+        TurnOrderHUD?.Setup(_state.AllUnits);
+
         var startEvents = _sim.StartBattle(_state);
         ProcessEvents(startEvents);
+
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -139,6 +144,7 @@ public partial class BattleManager : Node
                     GD.Print($"Enemy {unit.Id} turn skipped automatically.");
                     var nextEvents = _sim.EndTurn(_state, unit.Id);
                     ProcessEvents(nextEvents);
+                    return;
                 }
             }
             else if (evt is TurnEndedEvent turnEnded)
@@ -146,6 +152,10 @@ public partial class BattleManager : Node
                 GD.Print($"Turn ended for: {turnEnded.UnitId}");
                 PlayerGrid?.ClearHighlights();
                 EnemyGrid?.ClearHighlights();
+            }
+            else if (evt is TurnOrderChangedEvent turnOrder)
+            {
+                TurnOrderHUD?.Refresh(turnOrder.OrderUnitIds, turnOrder.ActiveUnitId, turnOrder.RemainingThisRound);
             }
         }
     }
