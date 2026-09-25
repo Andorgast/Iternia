@@ -233,6 +233,10 @@ public partial class BattleManager : Node
                 EnemyGrid?.ClearHighlights();
                 ButtonManager.RemoveButtons();
             }
+            else if (evt is EnemyAbilityChosenEvent abilityChosen)
+            {
+                GD.Print($"Enemy {abilityChosen.UnitId} chose ability '{abilityChosen.ActionId}' from tile ({abilityChosen.EnemyPos.row},{abilityChosen.EnemyPos.collum})");
+            }
             else if (evt is TurnOrderChangedEvent turnOrder)
             {
                 TurnOrderHUD?.Refresh(turnOrder.OrderUnitIds, turnOrder.ActiveUnitId, turnOrder.RemainingThisRound);

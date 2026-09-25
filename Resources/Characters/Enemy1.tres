@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="EnemyUnit" format=3 uid="uid://bhnm1nmvwmwe4"]
 
+[ext_resource type="Resource" uid="uid://cyfsdm11ne6dd" path="res://Resources/Abilities/Rapier.tres" id="1_0hrty"]
 [ext_resource type="Script" uid="uid://dsx1jndbgngag" path="res://Scripts/Models/EnemyUnit.cs" id="1_as1oi"]
 
 [resource]
@@ -8,7 +9,7 @@ InitialAllowedTiles = Basis(0, 1, 1, 1, 1, 1, 0, 1, 1)
 Id = "Enemy1"
 Name = "Enemy1"
 Side = 1
-Actions = null
+Actions = Array[Object]([ExtResource("1_0hrty")])
 Resistances = null
 Weaknesses = null
 InitialAttack = 10

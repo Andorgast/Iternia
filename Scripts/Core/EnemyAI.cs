@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 using Iternia.Scripts.Models;
 
 namespace Iternia.Scripts.Core;
@@ -30,6 +31,36 @@ public static class EnemyAI
             return null;
 
         return candidates[_rng.Next(candidates.Count)];
+    }
+
+    public static Models.Action PickAbility(BattleState state, EnemyUnit enemy)
+    {
+        if (!MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos))
+            return null;
+
+        var usable = new List<Models.Action>();
+
+        foreach (var action in enemy.Actions)
+        {
+            if (!action.OriginSquares.HasPos(enemyPos))
+                continue;
+
+            Formation targetFormation = action.TargetSide == TargetSide.Enemy
+                ? state.PlayerFormation
+                : state.EnemyFormation;
+
+            bool hasTarget = action.TargetSquares
+                .GetPositions()
+                .Any(tile => targetFormation.GetUnitAt(tile) != null);
+
+            if (hasTarget)
+                usable.Add(action);
+        }
+
+        if (usable.Count == 0)
+            return null;
+
+        return usable[_rng.Next(usable.Count)];
     }
 }
 

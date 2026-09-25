@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 
 namespace Iternia.Scripts.Core;
 
@@ -58,10 +59,16 @@ public class BattleSim
                 events.Add(evt);
         }
 
-        // TODO: ability uitvoeren
+        var chosenAction = EnemyAI.PickAbility(state, enemy);
+        if (chosenAction != null)
+        {
+            MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos);
+            events.Add(new EnemyAbilityChosenEvent(enemy.Id, chosenAction.Id, enemyPos));
+        }
 
         return events;
     }
+
 
     private void AdvanceTurn(BattleState state, List<BattleEvent> events)
     {
