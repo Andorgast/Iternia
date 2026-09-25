@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Iternia.Scripts.Core;
 
@@ -45,11 +46,29 @@ public class BattleSim
         return events;
     }
 
+    public IReadOnlyList<BattleEvent> ExecuteEnemyTurn(BattleState state, Models.EnemyUnit enemy)
+    {
+        var events = new List<BattleEvent>();
+
+        var target = EnemyAI.PickMoveTarget(state, enemy);
+        if (target.HasValue)
+        {
+            var moveEvents = TryMove(state, enemy.Id, target.Value);
+            foreach (var evt in moveEvents)
+                events.Add(evt);
+        }
+
+        // TODO: ability uitvoeren
+
+        return events;
+    }
+
     private void AdvanceTurn(BattleState state, List<BattleEvent> events)
     {
         if (state.TurnQueue.Count == 0)
         {
             var newOrder = _turnOrder.CalculateRoundOrder(state);
+            state.CurrentRoundOrder = newOrder;
             foreach (var id in newOrder)
             {
                 state.TurnQueue.Enqueue(id);
@@ -65,8 +84,10 @@ public class BattleSim
             {
                 state.CurrentTurnBudget.Reset(activeUnit);
             }
-            
+
             events.Add(new TurnStartedEvent(nextUnitId));
+            var remaining = new List<string>(state.TurnQueue);
+            events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, nextUnitId, remaining));
         }
         else
         {

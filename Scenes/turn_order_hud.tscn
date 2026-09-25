@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://yitm8djlcual"]
+
+[ext_resource type="Script" uid="uid://bgn8s00vqlde0" path="res://Scripts/View/TurnOrderHUD.cs" id="1_ly5ly"]
+[ext_resource type="PackedScene" uid="uid://bk5lpayocj6pk" path="res://Scenes/turn_slot.tscn" id="2_ugnbl"]
+
+[node name="TurnOrderHUD" type="HBoxContainer" unique_id=1648753853]
+custom_minimum_size = Vector2(0, 60)
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("1_ly5ly")
+TurnSlotScene = ExtResource("2_ugnbl")

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Iternia.Scripts.Models;
 
@@ -11,4 +12,5 @@ public class BattleState
     public TurnBudget CurrentTurnBudget { get; } = new();
     public string ActiveUnitId { get; set; }
     public Queue<string> TurnQueue { get; } = new();
+    public List<string> CurrentRoundOrder { get; set; } = new();
 }

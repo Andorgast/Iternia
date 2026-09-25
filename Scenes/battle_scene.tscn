@@ -11,6 +11,12 @@
 [ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="9_ed262"]
 
 [node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "ButtonManager")]
+[ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="4_w4764"]
+[ext_resource type="Resource" uid="uid://bhnm1nmvwmwe4" path="res://Resources/Characters/Enemy1.tres" id="5_w4764"]
+[ext_resource type="Resource" uid="uid://103g1ym6pnxb" path="res://Resources/Characters/Enemy2.tres" id="6_ed262"]
+[ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="8_w4764"]
+
+[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD")]
 script = ExtResource("1_e5vbs")
 PlayerGrid = NodePath("PlayerGrid")
 EnemyGrid = NodePath("EnemyGrid")
@@ -19,6 +25,10 @@ Player1Resource = ExtResource("3_20f6w")
 Player2Resource = ExtResource("4_ed262")
 EnemyResource = ExtResource("5_ed262")
 ButtonManager = NodePath("ButtonManager")
+Player2Resource = ExtResource("4_w4764")
+Enemy1Resource = ExtResource("5_w4764")
+Enemy2Resource = ExtResource("6_ed262")
+TurnOrderHUD = NodePath("TurnOrderHUD")
 
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
 position = Vector2(151, 290)
@@ -37,3 +47,10 @@ script = ExtResource("8_w4764")
 _buttonScene = ExtResource("9_ed262")
 _buttonWidth = 128
 _spacing = 100
+[node name="TurnOrderHUD" parent="." unique_id=1648753853 instance=ExtResource("8_w4764")]
+offset_left = 533.0
+offset_top = 34.0
+offset_right = 533.0
+offset_bottom = 94.0
+layout_direction = 2
+alignment = 1
