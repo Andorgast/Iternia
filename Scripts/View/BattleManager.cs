@@ -1,10 +1,13 @@
 using Godot;
 using System.Collections.Generic;
+using System.Linq;
+using Godot.Collections;
 using Iternia.Scripts.Core;
 using Iternia.View;
 
 using Iternia.Scripts.Models;
 using Iternia.Scripts.View;
+using Action = System.Action;
 
 namespace Iternia.Manager;
 
@@ -19,10 +22,13 @@ public partial class BattleManager : Node
     [Export] public EnemyUnit Enemy2Resource { get; set; }
     [Export] public TurnOrderHUD TurnOrderHUD{ get; set; }
 
+    [Export] public ButtonManager ButtonManager;
+
     private BattleState _state;
     private BattleSim _sim;
+    private Iternia.Scripts.Models.Action _currentAction;
     
-    private readonly Dictionary<string, UnitView> _unitViews = new();
+    private readonly System.Collections.Generic.Dictionary<string, UnitView> _unitViews = new();
 
     public override void _Ready()
     {
@@ -32,6 +38,7 @@ public partial class BattleManager : Node
 
         if (PlayerGrid != null) PlayerGrid.OnTileClicked += HandleTileClicked;
         if (EnemyGrid != null) EnemyGrid.OnTileClicked += HandleTileClicked;
+        if (ButtonManager != null) ButtonManager.OnButtonClicked += HandleActionPressed;
 
         SpawnUnitFromResource(Player1Resource, TargetSide.Ally, new GridPos(1, 1));
         SpawnUnitFromResource(Player2Resource, TargetSide.Ally, new GridPos(2, 1));
@@ -100,12 +107,75 @@ public partial class BattleManager : Node
 
         GD.Print($"  > activeUnit.Side={activeUnit.Side}, clickedSide={clickedSide}");
 
+        if (_currentAction != null)
+        {
+            if (_currentAction.TargetSquares.GetPositions().ToList().Contains(clickedPos) && clickedSide == _currentAction.TargetSide)
+            {
+                GD.Print("Action execution goes here");
+                if (clickedSide == TargetSide.Ally)
+                {
+                    PlayerGrid.ClearHighlights();
+                }
+                else if (clickedSide == TargetSide.Enemy)
+                {
+                    EnemyGrid.ClearHighlights();
+                }
+                _currentAction = null;
+                _state.CurrentTurnBudget.SpendMainAction();
+                UpdateMovementHighlights();
+                if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
+                if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
+                {
+                    GD.Print($"Player {_state.ActiveUnitId} turn ended automatically.");
+                    var events = _sim.EndTurn(_state, _state.ActiveUnitId);
+                    ProcessEvents(events);
+                }
+            }
+            return;
+        }
+
         if (activeUnit.Side != TargetSide.Ally) return; 
         if (clickedSide != activeUnit.Side) return; 
 
-        var events = _sim.TryMove(_state, activeUnit.Id, clickedPos);
+        IReadOnlyList<BattleEvent> events2 = _sim.TryMove(_state, activeUnit.Id, clickedPos);
+        IReadOnlyList<BattleEvent> events3 = [];
+        if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
+        if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
+        {
+            GD.Print($"Player {_state.ActiveUnitId} turn ended automatically.");
+            events3 = _sim.EndTurn(_state, _state.ActiveUnitId);
+        }
+        ProcessEvents(events2);
+        ProcessEvents(events3);
+    }
+
+    private void HandleActionPressed(string buttonId)
+    {
+        GD.Print($"Action {buttonId} was pressed");
+        List<GridPos> targetSquares = [];
+        if (_currentAction != _state.AllUnits[_state.ActiveUnitId].Actions[int.Parse(buttonId)])
+        {
+            _currentAction = _state.AllUnits[_state.ActiveUnitId].Actions[int.Parse(buttonId)];
+            targetSquares = _currentAction.TargetSquares.GetPositions().ToList();
+        }
+        if (_currentAction.TargetSide == TargetSide.Ally)
+        {
+            PlayerGrid.ClearHighlights();
+            PlayerGrid.HighlightTiles(targetSquares);
+        }
+        else
+        {
+            PlayerGrid.ClearHighlights();
+            EnemyGrid.ClearHighlights();
+            EnemyGrid.HighlightTiles(targetSquares);
+        }
+
+        if (targetSquares.Count == 0)
+        {
+            _currentAction = null;
+            UpdateMovementHighlights();
+        }
         
-        ProcessEvents(events);
     }
 
     private void ProcessEvents(IReadOnlyList<BattleEvent> events)
@@ -140,6 +210,7 @@ public partial class BattleManager : Node
                 GD.Print($"DEBUG Budget: MoveSteps={_state.CurrentTurnBudget.MoveSteps}, AP={_state.CurrentTurnBudget.ActionPoints}");
 
                 UpdateMovementHighlights();
+                ButtonManager.GenerateButtons(_state.AllUnits[turnStarted.UnitId].Actions);
 
                 if (_state.AllUnits.TryGetValue(turnStarted.UnitId, out var unit) && unit.Side == TargetSide.Enemy)
                 {
@@ -160,6 +231,7 @@ public partial class BattleManager : Node
                 GD.Print($"Turn ended for: {turnEnded.UnitId}");
                 PlayerGrid?.ClearHighlights();
                 EnemyGrid?.ClearHighlights();
+                ButtonManager.RemoveButtons();
             }
             else if (evt is TurnOrderChangedEvent turnOrder)
             {

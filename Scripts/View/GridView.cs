@@ -53,11 +53,11 @@ public partial class GridView : Node2D
             return;
         }
 
-        for (int lane = 0; lane < 3; lane++)
+        for (int collum = 0; collum < 3; collum++)
         {
-            for (int rank = 0; rank < 3; rank++)
+            for (int row = 0; row < 3; row++)
             {
-                GridPos pos = new GridPos(rank, lane);
+                GridPos pos = new GridPos(row, collum);
                 Vector2 screenPos = GridToScreen(pos);
 
                 BattleTile tile = TileScene.Instantiate<BattleTile>();

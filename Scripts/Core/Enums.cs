@@ -44,5 +44,6 @@ public enum TargetType
 {
     Unit,
     Aoi,
-    Tile
+    Tile,
+    None
 }
