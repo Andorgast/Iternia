@@ -69,34 +69,6 @@ public class TileMask
                     posList.Add(new GridPos(originPoint.collum + collum, originPoint.row + row));
             }
         }
-        // //Is there a tile to the left and up?
-        // if (originPoint.collum - 1 >= 0 && originPoint.row - 1 >= 0 && aoi.HasPos(new GridPos(0, 0))) 
-        //     posList.Add(new GridPos(originPoint.collum - 1, originPoint.row - 1));
-        // //Is there a tile above?
-        // if (originPoint.collum - 1 >= 0 && aoi.HasPos(new GridPos(0, 1))) 
-        //     posList.Add(new GridPos(originPoint.collum - 1, originPoint.row));
-        // //Is there a tile to the right and up?
-        // if (originPoint.collum - 1 >= 0 && originPoint.row + 1 <= 3 && aoi.HasPos(new GridPos(0, 2))) 
-        //     posList.Add(new GridPos(originPoint.collum - 1, originPoint.row + 1));
-        // //Is there a tile to the left?
-        // if (originPoint.row - 1 >= 0 && aoi.HasPos(new GridPos(1, 0))) 
-        //     posList.Add(new GridPos(originPoint.collum, originPoint.row - 1));
-        // //Is the origin-square included?
-        // if (aoi.HasPos(new GridPos(1, 1))) 
-        //     posList.Add(new GridPos(originPoint.collum, originPoint.row));
-        // //Is there a tile to right?
-        // if (originPoint.row + 1 <= 3 && aoi.HasPos(new GridPos(1, 2)))
-        //     posList.Add(new GridPos(originPoint.collum, originPoint.row + 1));
-        // //Is there a tile to the left and below?
-        // if (originPoint.collum + 1 <= 3 && originPoint.row - 1 >= 0 && aoi.HasPos(new GridPos(2, 0))) 
-        //     posList.Add(new GridPos(originPoint.collum + 1, originPoint.row - 1));
-        // //Is there a tile below?
-        // if (originPoint.collum + 1 <= 3 && aoi.HasPos(new GridPos(2, 1))) 
-        //     posList.Add(new GridPos(originPoint.collum + 1, originPoint.row));
-        // //Is there a tile to the right and below?
-        // if (originPoint.collum + 1 <= 3 && originPoint.row + 1 <= 3 && aoi.HasPos(new GridPos(2, 2))) 
-        //     posList.Add(new GridPos(originPoint.collum + 1, originPoint.row + 1));
-        //
         return new TileMask(posList);
     }
 

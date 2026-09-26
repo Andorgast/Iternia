@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ public partial class BattleManager : Node
     private BattleState _state;
     private BattleSim _sim;
     private Iternia.Scripts.Models.Action _currentAction;
+    private string _enemyToTarget;
     
     private readonly System.Collections.Generic.Dictionary<string, UnitView> _unitViews = new();
 
@@ -119,15 +121,7 @@ public partial class BattleManager : Node
                     (
                         _currentAction.AllyTargetRange == AllyTargetRange.NextToSelf 
                         && 
-                        (
-                            clickedPos == new GridPos(pos.collum, pos.row + 1) 
-                            || 
-                            clickedPos == new GridPos(pos.collum, pos.row - 1) 
-                            ||
-                            clickedPos == new GridPos(pos.collum + 1, pos.row) 
-                            ||
-                            clickedPos == new GridPos(pos.collum - 1, pos.row)
-                        )
+                        TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).HasPos(clickedPos)
                     )
                 ) 
                 && 
@@ -136,38 +130,71 @@ public partial class BattleManager : Node
                 _currentAction.OriginSquares.GetPositions().ToList().Contains(pos)
             )
             {
-                switch (_currentAction.TargetType)
+                if (_currentAction.TargetType == TargetType.Tile)
                 {
-                    case TargetType.Ally:
-                        break;
-                    case TargetType.AllyAoi:
-                        break;
-                    case TargetType.Tile:
-                        break;
-                    case TargetType.TileAoi:
-                        break;
-                    case TargetType.Enemy:
-                        break;
-                    case TargetType.EnemyAoi:
-                        break;
-                    case TargetType.SelfDamage:
-                        break;
-                    case TargetType.SelfDamageAoi:
-                        break;
-                    case TargetType.AllyAndEnemy:
-                        break;
+                    //TODO apply a tile effect
+                    GD.Print("executed an tile action");
+                    return;
+                }
+                string targetId = null;
+                if (_currentAction.TargetSide == TargetSide.Ally) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
+                else if (_currentAction.TargetSide == TargetSide.Enemy) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
+                if(targetId != null)
+                {
+                    if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange != AllyTargetRange.Self && _enemyToTarget != null)
+                    {
+                        string allyTilesToHighlight = null;
+                        switch (_currentAction.AllyTargetRange)
+                        {
+                            case AllyTargetRange.Full:
+                                allyTilesToHighlight = "xxx/xxx/xxx";
+                                break;
+                            case AllyTargetRange.DefinedByTargetGrid:
+                                allyTilesToHighlight = _currentAction.TargetSquares.ToString();
+                                break;
+                            case AllyTargetRange.NextToSelf:
+                                allyTilesToHighlight = TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).ToString();
+                                break;
+                        }
+                        PlayerGrid.HighlightTiles(TileMask.Parse(allyTilesToHighlight).GetPositions());
+                        _enemyToTarget = targetId;
+                        GD.Print("executed half an action");
+                        return;
+                    }
+                    else if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange == AllyTargetRange.Self)
+                    {
+                        ExecuteActionOnUnits(targetId, _currentAction.StatToChange, _currentAction.StatChangeAmount);
+                        ExecuteActionOnUnits(_state.ActiveUnitId, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount);
+                        _state.CurrentTurnBudget.SpendMainAction();
+                        GD.Print("executed a self action");
+                        return;
+                    }
+                    else if (_enemyToTarget != null)
+                    {
+                        ExecuteActionOnUnits(_enemyToTarget, _currentAction.StatToChange, _currentAction.StatChangeAmount);
+                        ExecuteActionOnUnits(targetId, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount);
+                        _state.CurrentTurnBudget.SpendMainAction();
+                        GD.Print("executed an double action");
+                        return;
+                    }
+                    
+                    if (_currentAction.AoiSquares.GetPositions().Any())
+                    {
+                        foreach (var position in TileMask.SquaresToHit(_currentAction.AoiSquares, clickedPos).GetPositions())
+                        {
+                            string secondaryTarget = null;
+                            if (_currentAction.TargetSide == TargetSide.Ally || _currentAction.TargetSide == TargetSide.Both) secondaryTarget = _state.PlayerFormation.GetUnitAt(position);
+                            else if (_currentAction.TargetSide == TargetSide.Enemy) secondaryTarget = _state.EnemyFormation.GetUnitAt(position);
+                            if (secondaryTarget != null) ExecuteActionOnUnits(secondaryTarget, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount);
+                        }
+                    }
+                    ExecuteActionOnUnits(targetId, _currentAction.StatToChange, _currentAction.StatChangeAmount);
+                    _state.CurrentTurnBudget.SpendMainAction();
                 }
                 GD.Print("Action execution should be done here");
-                if (clickedSide == TargetSide.Ally)
-                {
-                    PlayerGrid.ClearHighlights();
-                }
-                else if (clickedSide == TargetSide.Enemy)
-                {
-                    EnemyGrid.ClearHighlights();
-                }
+                PlayerGrid.ClearHighlights();
+                EnemyGrid.ClearHighlights();
                 _currentAction = null;
-                _state.CurrentTurnBudget.SpendMainAction();
                 UpdateMovementHighlights();
                 if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
                 if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
@@ -223,9 +250,44 @@ public partial class BattleManager : Node
         if (targetSquares.Count == 0)
         {
             _currentAction = null;
+            _enemyToTarget = null;
             UpdateMovementHighlights();
         }
         
+    }
+
+    private void ExecuteActionOnUnits(string unitId, Stat statToChange, float statChangeAmount)
+    {
+        switch (statToChange)
+        {
+            case Stat.None:
+                break;
+            case Stat.MaxHp:
+                _state.AllUnits[unitId].MaxHp += (int)statChangeAmount;
+                break;
+            case Stat.Attack:
+                _state.AllUnits[unitId].Attack += statChangeAmount;
+                break;
+            case Stat.Speed:
+                _state.AllUnits[unitId].Speed += statChangeAmount;
+                break;
+            case Stat.Aggro:
+                _state.AllUnits[unitId].Aggro += statChangeAmount;
+                break;
+            case Stat.MaxMovement:
+                _state.AllUnits[unitId].MaxMovement += (int)statChangeAmount;
+                break;
+            case Stat.Movement:
+                _state.AllUnits[unitId].Movement += (int)statChangeAmount;
+                break;
+            case Stat.MaxActionPoints:
+                _state.AllUnits[unitId].MaxActionPoints += (int)statChangeAmount;
+                break;
+            case Stat.ActionPoints:
+                _state.AllUnits[unitId].ActionPoints += (int)statChangeAmount;
+                break;
+        }
+        _state.AllUnits[unitId].Hp += (int)MathF.Round(_currentAction.Damage * _state.AllUnits[_state.ActiveUnitId].Attack);
     }
 
     private void ProcessEvents(IReadOnlyList<BattleEvent> events)
