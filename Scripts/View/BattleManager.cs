@@ -125,7 +125,11 @@ public partial class BattleManager : Node
                     )
                 ) 
                 && 
-                clickedSide == _currentAction.TargetSide 
+                (
+                    clickedSide == _currentAction.TargetSide 
+                    ||
+                    _currentAction.TargetSide == TargetSide.Both
+                )
                 &&
                 _currentAction.OriginSquares.GetPositions().ToList().Contains(pos)
             )
@@ -156,7 +160,10 @@ public partial class BattleManager : Node
                                 allyTilesToHighlight = TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).ToString();
                                 break;
                         }
-                        PlayerGrid.HighlightTiles(TileMask.Parse(allyTilesToHighlight).GetPositions());
+                        EnemyGrid.ClearHighlights();
+                        EnemyGrid.HighlightTiles([clickedPos], TileColorReason.Hover);
+                        PlayerGrid.ClearHighlights();
+                        PlayerGrid.HighlightTiles(TileMask.Parse(allyTilesToHighlight).GetPositions(), TileColorReason.TargetForAction);
                         _enemyToTarget = targetId;
                         GD.Print("executed half an action");
                         return;
@@ -238,13 +245,17 @@ public partial class BattleManager : Node
         if (_currentAction.TargetSide == TargetSide.Ally)
         {
             PlayerGrid.ClearHighlights();
-            PlayerGrid.HighlightTiles(targetSquares);
+            EnemyGrid.ClearHighlights();
+            PlayerGrid.HighlightTiles(_currentAction.OriginSquares.GetPositions().ToList(), TileColorReason.OriginForAction);
+            PlayerGrid.HighlightTiles(targetSquares, TileColorReason.TargetForAction);
+            
         }
         else
         {
             PlayerGrid.ClearHighlights();
             EnemyGrid.ClearHighlights();
-            EnemyGrid.HighlightTiles(targetSquares);
+            PlayerGrid.HighlightTiles(_currentAction.OriginSquares.GetPositions().ToList(), TileColorReason.OriginForAction);
+            EnemyGrid.HighlightTiles(targetSquares, TileColorReason.TargetForAction);
         }
 
         if (targetSquares.Count == 0)
@@ -352,7 +363,7 @@ public partial class BattleManager : Node
         if (activeUnit.Side != TargetSide.Ally) return;
 
         var validMoves = MovementRules.GetValidMoves(_state, activeUnit.Id);
-        PlayerGrid?.HighlightTiles(validMoves);
+        PlayerGrid?.HighlightTiles(validMoves, TileColorReason.MovePossible);
     }
 
     // private async void SkipEnemyTurn(string unitId)

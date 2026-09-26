@@ -7,7 +7,6 @@ script = ExtResource("1_2whj2")
 Name = "Darkness"
 InitialOriginSquares = Basis(0, 1.1, 0, 0, 0, 1.1, 0, 1.1, 0)
 InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 1.1, 0, 1.1, 0, 0)
-TargetType = 2
 ActionElement = 5
 TargetSide = 1
 StatToChange = 5

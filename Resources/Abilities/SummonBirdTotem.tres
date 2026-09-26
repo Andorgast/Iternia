@@ -7,7 +7,6 @@ script = ExtResource("1_jpyox")
 Name = "Summon bird"
 InitialOriginSquares = Basis(0, 0, 1.1, 0, 1.1, 1.1, 0, 0, 1.1)
 InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 1.1, 0, 1.1, 1.1, 0)
-TargetType = 2
 ActionElement = 1
 Damage = -2
 metadata/_custom_type_script = "uid://cl6mib0yubm5u"

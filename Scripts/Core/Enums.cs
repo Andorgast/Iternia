@@ -17,17 +17,6 @@ public enum Element
     Dark
 }
 
-public enum ActionType
-{
-    Attack,
-    Buff,
-    Debuff,
-    TileEffect,
-    AoiAttack,
-    AoiTileEffect,
-    BuffAndDebuff,
-}
-
 public enum Stat
 {
     None,
@@ -55,4 +44,13 @@ public enum AllyTargetRange
     NextToSelf,
     DefinedByTargetGrid,
     DoesntTargetAlly
+}
+
+public enum TileColorReason
+{
+    MovePossible,
+    OriginForAction,
+    TargetForAction,
+    Hover,
+    Reset
 }

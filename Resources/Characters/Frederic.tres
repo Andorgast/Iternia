@@ -1,12 +1,13 @@
 [gd_resource type="Resource" script_class="Unit" format=3 uid="uid://baxeffxwsupoe"]
 
 [ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_bv1lb"]
+[ext_resource type="Resource" uid="uid://boske7fp3qcuj" path="res://Resources/Abilities/Heal.tres" id="1_k6yut"]
 
 [resource]
 script = ExtResource("1_bv1lb")
 Id = "Frederic"
 Name = "Frederic"
-Actions = null
+Actions = Array[Object]([ExtResource("1_k6yut")])
 Resistances = Array[int]([4, 5])
 Weaknesses = null
 InitialAttack = 2
