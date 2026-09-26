@@ -3,7 +3,8 @@ namespace Iternia.Scripts.Core;
 public enum TargetSide
 {
     Ally,
-    Enemy
+    Enemy,
+    Both
 }
 
 public enum Element
@@ -42,8 +43,16 @@ public enum Stat
 
 public enum TargetType
 {
-    Unit,
-    Aoi,
     Tile,
-    None
+    Unit,
+    EnemyAndAlly,
+}
+
+public enum AllyTargetRange
+{
+    Full,
+    Self,
+    NextToSelf,
+    DefinedByTargetGrid,
+    DoesntTargetAlly
 }

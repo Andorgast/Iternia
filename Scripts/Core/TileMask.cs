@@ -53,6 +53,25 @@ public class TileMask
         return new TileMask(positions);
     }
 
+    public static TileMask SquaresToHit(TileMask aoi, GridPos originPoint)
+    {
+        List<GridPos> posList = [];
+        for (int collum = -1; collum < 2; collum++)
+        {
+            for (int row = -1; row < 2; row++)
+            {
+                if (originPoint.collum + collum >= 0 && originPoint.collum +collum <= 3
+                    &&
+                    originPoint.row + row >= 0 && originPoint.row <= 3
+                    &&
+                    aoi.HasPos(new GridPos(collum + 1, row + 1))
+                )
+                    posList.Add(new GridPos(originPoint.collum + collum, originPoint.row + row));
+            }
+        }
+        return new TileMask(posList);
+    }
+
     public bool HasPos(GridPos pos)
     {
         return _positions.Contains(pos);
@@ -68,5 +87,20 @@ public class TileMask
         var combined = new HashSet<GridPos>(_positions);
         combined.IntersectWith(other._positions);
         return new TileMask(combined);
+    }
+
+    public new string ToString()
+    {
+        string returnString = "";
+        for (int collum = 0; collum < 3; collum++)
+        {
+            for (int row = 0; row < 3; row++)
+            {
+                if (_positions.Contains(new GridPos(row, collum))) returnString += "X";
+                else returnString += ".";
+            }
+            returnString += "/";
+        }
+        return returnString.Remove(11);
     }
 }
