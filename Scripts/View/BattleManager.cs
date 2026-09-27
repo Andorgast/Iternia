@@ -298,7 +298,7 @@ public partial class BattleManager : Node
                 _state.AllUnits[unitId].ActionPoints += (int)statChangeAmount;
                 break;
         }
-        _state.AllUnits[unitId].Hp += (int)MathF.Round(_currentAction.Damage * _state.AllUnits[_state.ActiveUnitId].Attack);
+        _state.AllUnits[unitId].TakeDamage((int)MathF.Round(_currentAction.Damage * _state.AllUnits[_state.ActiveUnitId].Attack),  _currentAction.ActionElement);
     }
 
     private void ProcessEvents(IReadOnlyList<BattleEvent> events)
