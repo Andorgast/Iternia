@@ -22,12 +22,12 @@ public partial class Unit : Resource
     [Export] protected float InitialAggro;
     
     //The actual attributes that the game should use
-    public int Attack;
-    public int DefaultAttack;
+    public float Attack;
+    public float DefaultAttack;
     public int Hp;
     public int MaxHp;
-    public int Speed;
-    public int DefaultSpeed;
+    public float Speed;
+    public float DefaultSpeed;
     public int MaxMovement;
     public int Movement;
     public int DefaultMovement;

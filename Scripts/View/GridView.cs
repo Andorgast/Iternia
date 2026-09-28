@@ -29,22 +29,21 @@ public partial class GridView : Node2D
     {
         foreach (var tile in _tiles.Values)
         {
-            tile.SetHighlight(false);
+            tile.UpdateVisuals(true, TileColorReason.Reset, false);
         }
     }
 
-    public void HighlightTiles(IEnumerable<GridPos> positions)
+    public void HighlightTiles(IEnumerable<GridPos> positions, TileColorReason reason)
     {
-        ClearHighlights();
         foreach (var pos in positions)
         {
             if (_tiles.TryGetValue(pos, out var tile))
             {
-                tile.SetHighlight(true);
+                tile.UpdateVisuals(false, reason, true);
             }
         }
     }
-
+    
     private void GenerateGrid()
     {
         if (TileScene == null)
@@ -75,15 +74,15 @@ public partial class GridView : Node2D
 
     private Vector2 GridToScreen(GridPos pos)
     {
-        int xIndex = pos.row;
+        int xIndex = pos.collum;
         
         if (Side == TargetSide.Ally)
         {
-            xIndex = 2 - pos.row;
+            xIndex = 2 - pos.collum;
         }
 
         float x = xIndex * (TileSize + Spacing);
-        float y = pos.collum * (TileSize + Spacing);
+        float y = pos.row * (TileSize + Spacing);
         
         return new Vector2(x, y);
     }

@@ -3,7 +3,8 @@ namespace Iternia.Scripts.Core;
 public enum TargetSide
 {
     Ally,
-    Enemy
+    Enemy,
+    Both
 }
 
 public enum Element
@@ -14,17 +15,6 @@ public enum Element
     Ice,
     Physical,
     Dark
-}
-
-public enum ActionType
-{
-    Attack,
-    Buff,
-    Debuff,
-    TileEffect,
-    AoiAttack,
-    AoiTileEffect,
-    BuffAndDebuff,
 }
 
 public enum Stat
@@ -42,8 +32,25 @@ public enum Stat
 
 public enum TargetType
 {
-    Unit,
-    Aoi,
     Tile,
-    None
+    Unit,
+    EnemyAndAlly,
+}
+
+public enum AllyTargetRange
+{
+    Full,
+    Self,
+    NextToSelf,
+    DefinedByTargetGrid,
+    DoesntTargetAlly
+}
+
+public enum TileColorReason
+{
+    MovePossible,
+    OriginForAction,
+    TargetForAction,
+    Hover,
+    Reset
 }
