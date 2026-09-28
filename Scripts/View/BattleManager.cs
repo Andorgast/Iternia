@@ -2,13 +2,11 @@ using System;
 using Godot;
 using System.Collections.Generic;
 using System.Linq;
-using Godot.Collections;
 using Iternia.Scripts.Core;
 using Iternia.View;
 
 using Iternia.Scripts.Models;
 using Iternia.Scripts.View;
-using Action = System.Action;
 
 namespace Iternia.Manager;
 
@@ -27,10 +25,10 @@ public partial class BattleManager : Node
 
     private BattleState _state;
     private BattleSim _sim;
-    private Iternia.Scripts.Models.Action _currentAction;
+    private Scripts.Models.Action _currentAction;
     private string _enemyToTarget;
     
-    private readonly System.Collections.Generic.Dictionary<string, UnitView> _unitViews = new();
+    private readonly Dictionary<string, UnitView> _unitViews = new();
 
     public override void _Ready()
     {
@@ -102,6 +100,7 @@ public partial class BattleManager : Node
 
     private void HandleTileClicked(TargetSide clickedSide, GridPos clickedPos)
     {
+        IsCombatDone();
         GD.Print($"side: {clickedSide} position: {clickedPos.collum}, {clickedPos.row}");
         GD.Print($"  > ActiveUnitId='{_state.ActiveUnitId}'");
 
@@ -267,6 +266,7 @@ public partial class BattleManager : Node
     }
     private void HandleActionPressed(string buttonId)
     {
+        IsCombatDone();
         GD.Print($"Action {buttonId} was pressed");
         List<GridPos> targetSquares = [];
         if (_currentAction != _state.AllUnits[_state.ActiveUnitId].Actions[int.Parse(buttonId)])
@@ -355,10 +355,34 @@ public partial class BattleManager : Node
             RemoveUnitFromTurnOrder(unitId);
             _state.AllUnits.Remove(unitId);
         }
+        
+        IsCombatDone();
+    }
+
+    private void IsCombatDone()
+    {
+        bool playerAlive = false;
+        bool enemyAlive = false;
+        foreach (Unit unit in _state.AllUnits.Values)
+        {
+            switch (unit.Side)
+            {
+                case TargetSide.Ally:
+                    playerAlive = true;
+                    break;
+                case TargetSide.Enemy:
+                    enemyAlive = true;
+                    break;
+            }
+        }
+
+        if (!enemyAlive) ; //TODO trigger win state
+        else if (!playerAlive) ;//TODO trigger lose state
     }
 
     private void ProcessEvents(IReadOnlyList<BattleEvent> events)
     {
+        IsCombatDone();
         foreach (var evt in events)
         {
             if (evt is CommandFailedEvent fail)
@@ -453,12 +477,4 @@ public partial class BattleManager : Node
             UnitInfoPanel.UpdateInfo(null, null); // Hide panel
         }
     }
-
-    // private async void SkipEnemyTurn(string unitId)
-    // {
-    //     // Wacht 0.5 sec zodat de beurt zichtbaar overgeslagen wordt
-    //     await ToSignal(GetTree().CreateTimer(0.5f), SceneTreeTimer.SignalName.Timeout);
-    //     var nextEvents = _sim.EndTurn(_state, unitId);
-    //     ProcessEvents(nextEvents);
-    // }
 }
