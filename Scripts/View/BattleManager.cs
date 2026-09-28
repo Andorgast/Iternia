@@ -148,8 +148,8 @@ public partial class BattleManager : Node
                     return;
                 }
                 string targetId = null;
-                if (_currentAction.TargetSide == TargetSide.Ally) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
-                else if (_currentAction.TargetSide == TargetSide.Enemy) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
+                if (_currentAction.TargetSide == TargetSide.Ally || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget != null)) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
+                else if (_currentAction.TargetSide == TargetSide.Enemy || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget == null)) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
                 if(targetId != null)
                 {
                     if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange != AllyTargetRange.Self && _enemyToTarget != null)
@@ -177,18 +177,28 @@ public partial class BattleManager : Node
                     }
                     else if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange == AllyTargetRange.Self)
                     {
-                        ExecuteActionOnUnits(targetId, _currentAction.StatToChange, _currentAction.StatChangeAmount);
-                        ExecuteActionOnUnits(_state.ActiveUnitId, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount);
-                        _state.CurrentTurnBudget.SpendMainAction();
-                        GD.Print("executed a self action");
+                        if (_state.CurrentTurnBudget.SpendMainAction())
+                        {
+                            ExecuteActionOnUnits(targetId, _currentAction.StatToChange, _currentAction.StatChangeAmount, _currentAction.Damage);
+                            ExecuteActionOnUnits(_state.ActiveUnitId, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
+                            GD.Print("executed a self action");
+                        }
+                        else GD.PrintErr("No actions left!");
+                        UpdateBattleVisuals();
                         return;
                     }
                     else if (_enemyToTarget != null)
                     {
-                        ExecuteActionOnUnits(_enemyToTarget, _currentAction.StatToChange, _currentAction.StatChangeAmount);
-                        ExecuteActionOnUnits(targetId, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount);
-                        _state.CurrentTurnBudget.SpendMainAction();
-                        GD.Print("executed an double action");
+                        if(_state.CurrentTurnBudget.SpendMainAction())
+                        {
+                            ExecuteActionOnUnits(_enemyToTarget, _currentAction.StatToChange,
+                                _currentAction.StatChangeAmount, _currentAction.Damage);
+                            ExecuteActionOnUnits(targetId, _currentAction.SecondaryStatToChange,
+                                _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
+                            GD.Print("executed an double action");
+                        }
+                        else GD.PrintErr("No actions left!");
+                        UpdateBattleVisuals();
                         return;
                     }
                     
@@ -199,30 +209,29 @@ public partial class BattleManager : Node
                             string secondaryTarget = null;
                             if (_currentAction.TargetSide == TargetSide.Ally || _currentAction.TargetSide == TargetSide.Both) secondaryTarget = _state.PlayerFormation.GetUnitAt(position);
                             else if (_currentAction.TargetSide == TargetSide.Enemy) secondaryTarget = _state.EnemyFormation.GetUnitAt(position);
-                            if (secondaryTarget != null) ExecuteActionOnUnits(secondaryTarget, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount);
+                            if (secondaryTarget != null) ExecuteActionOnUnits(secondaryTarget, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
                         }
                     }
-                    ExecuteActionOnUnits(targetId, _currentAction.StatToChange, _currentAction.StatChangeAmount);
-                    _state.CurrentTurnBudget.SpendMainAction();
+
+                    if (_state.CurrentTurnBudget.SpendMainAction())
+                    {
+                        ExecuteActionOnUnits(targetId, _currentAction.StatToChange, _currentAction.StatChangeAmount,
+                            _currentAction.Damage);
+                        GD.Print("Action execution should be done here");
+                    }
+                    else GD.PrintErr("No actions left!");
+                    UpdateBattleVisuals();
                 }
-                GD.Print("Action execution should be done here");
-                PlayerGrid.ClearHighlights();
-                EnemyGrid.ClearHighlights();
-                _currentAction = null;
-                UpdateMovementHighlights();
-                UpdateUnitInfoPanel();
-                if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
-                if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
+                else
                 {
-                    GD.Print($"Player {_state.ActiveUnitId} turn ended automatically.");
-                    var events = _sim.EndTurn(_state, _state.ActiveUnitId);
-                    ProcessEvents(events);
+                    GD.PrintErr("No viable target found!");
                 }
             }
             else
             {
                 GD.PrintErr("Conditions for the attack not met!");
             }
+            UpdateBattleVisuals();
             return;
         }
 
@@ -241,6 +250,21 @@ public partial class BattleManager : Node
         ProcessEvents(events3);
     }
 
+    private void UpdateBattleVisuals()
+    {
+        PlayerGrid.ClearHighlights();
+        EnemyGrid.ClearHighlights();
+        _currentAction = null;
+        UpdateMovementHighlights();
+        UpdateUnitInfoPanel();
+        if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
+        if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
+        {
+            GD.Print($"Player {_state.ActiveUnitId} turn ended automatically.");
+            var events = _sim.EndTurn(_state, _state.ActiveUnitId);
+            ProcessEvents(events);
+        }
+    }
     private void HandleActionPressed(string buttonId)
     {
         GD.Print($"Action {buttonId} was pressed");
@@ -275,7 +299,15 @@ public partial class BattleManager : Node
         
     }
 
-    private void ExecuteActionOnUnits(string unitId, Stat statToChange, float statChangeAmount)
+    private void RemoveUnitFromTurnOrder(string idToRemove)
+    {
+        List<string> tempQueueAsList = _state.TurnQueue.ToList();
+        tempQueueAsList.Remove(idToRemove);
+        _state.TurnQueue.Clear();
+        foreach (string unitId in tempQueueAsList) _state.TurnQueue.Enqueue(unitId);
+    }
+
+    private void ExecuteActionOnUnits(string unitId, Stat statToChange, float statChangeAmount, int damage)
     {
         switch (statToChange)
         {
@@ -306,7 +338,19 @@ public partial class BattleManager : Node
                 _state.AllUnits[unitId].ActionPoints += (int)statChangeAmount;
                 break;
         }
-        _state.AllUnits[unitId].TakeDamage((int)MathF.Round(_currentAction.Damage * _state.AllUnits[_state.ActiveUnitId].Attack),  _currentAction.ActionElement);
+        int oldHp = _state.AllUnits[unitId].Hp;
+        int newHp = _state.AllUnits[unitId].TakeDamage((int)MathF.Round(damage * _state.AllUnits[_state.ActiveUnitId].Attack), _currentAction.ActionElement);
+        if(oldHp != newHp)
+        {
+            _unitViews[unitId].SetHealth(newHp, _state.AllUnits[unitId].MaxHp);
+            GD.Print($"Health changed to: {newHp} from {oldHp}");
+        }
+
+        if (newHp <= 0)
+        {
+            RemoveUnitFromTurnOrder(unitId);
+            _state.AllUnits.Remove(unitId);
+        }
     }
 
     private void ProcessEvents(IReadOnlyList<BattleEvent> events)

@@ -38,8 +38,11 @@ public partial class Unit : Resource
     public float DefaultAggro;
     public int TakeDamage(int damageToTake, Element attackType)
     {
-        if (Resistances.Contains(attackType)) Hp -= damageToTake / 1;
+        if (damageToTake == 0) ;
+        else if (damageToTake < 0 && Hp - damageToTake > MaxHp) Hp = MaxHp;
+        else if (Resistances.Contains(attackType)) Hp -= damageToTake / 1;
         else if (Weaknesses.Contains(attackType)) Hp -= damageToTake * 1;
+        else Hp -= damageToTake;
         return Hp;
     }
     public void Init()

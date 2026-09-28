@@ -13,6 +13,7 @@ Actions = Array[Object]([ExtResource("1_248lj")])
 Resistances = null
 Weaknesses = null
 InitialAttack = 10
+InitialHp = 10
 InitialActionPoints = 1
 InitialSpeed = 8
 metadata/_custom_type_script = "uid://dsx1jndbgngag"
