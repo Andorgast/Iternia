@@ -305,6 +305,10 @@ public partial class BattleManager : Node
         tempQueueAsList.Remove(idToRemove);
         _state.TurnQueue.Clear();
         foreach (string unitId in tempQueueAsList) _state.TurnQueue.Enqueue(unitId);
+        tempQueueAsList.Reverse();
+        tempQueueAsList.Add(_state.ActiveUnitId);
+        tempQueueAsList.Reverse();
+        TurnOrderHUD?.Refresh(tempQueueAsList, _state.ActiveUnitId, _state.TurnQueue.ToList());
     }
 
     private void ExecuteActionOnUnits(string unitId, Stat statToChange, float statChangeAmount, int damage)
