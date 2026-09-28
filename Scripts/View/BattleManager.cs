@@ -21,7 +21,7 @@ public partial class BattleManager : Node
     [Export] public EnemyUnit Enemy1Resource { get; set; }
     [Export] public EnemyUnit Enemy2Resource { get; set; }
     [Export] public TurnOrderHUD TurnOrderHUD{ get; set; }
-
+    [Export] public UnitInfoPanel UnitInfoPanel { get; set; }
     [Export] public ButtonManager ButtonManager;
 
     private BattleState _state;
@@ -93,6 +93,7 @@ public partial class BattleManager : Node
             Vector2 screenPos = grid.Position + grid.GetTileScreenPos(pos);
             
             view.Setup(battleUnit.Id, screenPos);
+            view.SetHealth(battleUnit.Hp, battleUnit.MaxHp);
             _unitViews[battleUnit.Id] = view;
         }
     }
@@ -123,6 +124,7 @@ public partial class BattleManager : Node
                 _currentAction = null;
                 _state.CurrentTurnBudget.SpendMainAction();
                 UpdateMovementHighlights();
+                UpdateUnitInfoPanel();
                 if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
                 if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
                 {
@@ -203,6 +205,7 @@ public partial class BattleManager : Node
                 }
 
                 UpdateMovementHighlights();
+                UpdateUnitInfoPanel();
             }
             else if (evt is TurnStartedEvent turnStarted)
             {
@@ -210,11 +213,12 @@ public partial class BattleManager : Node
                 GD.Print($"DEBUG Budget: MoveSteps={_state.CurrentTurnBudget.MoveSteps}, AP={_state.CurrentTurnBudget.ActionPoints}");
 
                 UpdateMovementHighlights();
+                UpdateUnitInfoPanel();
                 ButtonManager.GenerateButtons(_state.AllUnits[turnStarted.UnitId].Actions);
 
                 if (_state.AllUnits.TryGetValue(turnStarted.UnitId, out var unit) && unit.Side == TargetSide.Enemy)
                 {
-                    if (unit is Iternia.Scripts.Models.EnemyUnit enemyUnit)
+                    if (unit is EnemyUnit enemyUnit)
                     {
                         GD.Print($"Enemy {unit.Id} executing AI turn.");
                         var aiEvents = _sim.ExecuteEnemyTurn(_state, enemyUnit);
@@ -232,6 +236,7 @@ public partial class BattleManager : Node
                 PlayerGrid?.ClearHighlights();
                 EnemyGrid?.ClearHighlights();
                 ButtonManager.RemoveButtons();
+                UpdateUnitInfoPanel();
             }
             else if (evt is EnemyAbilityChosenEvent abilityChosen)
             {
@@ -255,6 +260,20 @@ public partial class BattleManager : Node
 
         var validMoves = MovementRules.GetValidMoves(_state, activeUnit.Id);
         PlayerGrid?.HighlightTiles(validMoves);
+    }
+
+    private void UpdateUnitInfoPanel()
+    {
+        if (UnitInfoPanel == null) return;
+        
+        if (!string.IsNullOrEmpty(_state.ActiveUnitId) && _state.AllUnits.TryGetValue(_state.ActiveUnitId, out var activeUnit))
+        {
+            UnitInfoPanel.UpdateInfo(activeUnit, _state.CurrentTurnBudget);
+        }
+        else
+        {
+            UnitInfoPanel.UpdateInfo(null, null); // Hide panel
+        }
     }
 
     // private async void SkipEnemyTurn(string unitId)

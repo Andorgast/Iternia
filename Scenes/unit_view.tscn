@@ -5,6 +5,17 @@
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ix2id"]
 size = Vector2(20, 20)
 
-[node name="UnitView" type="Sprite2D" unique_id=2099433732]
-texture = SubResource("PlaceholderTexture2D_ix2id")
+[node name="UnitView" type="Node2D" unique_id=1738822366 node_paths=PackedStringArray("_healthBar")]
 script = ExtResource("1_ihntd")
+_healthBar = NodePath("HealthBar")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=501001756]
+texture = SubResource("PlaceholderTexture2D_ix2id")
+
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=738517893]
+offset_left = -20.0
+offset_top = -28.0
+offset_right = 20.0
+offset_bottom = -22.0
+value = 100.0
+show_percentage = false

@@ -11,8 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="7_w4764"]
 [ext_resource type="Script" uid="uid://dce6g7e6jeqkk" path="res://Scripts/View/ButtonManager.cs" id="8_w4764"]
 [ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="9_ed262"]
+[ext_resource type="PackedScene" uid="uid://ddy2qxxxxxxx" path="res://Scenes/UnitInfoPanel.tscn" id="10_info"]
 
-[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD", "ButtonManager")]
+[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD", "UnitInfoPanel", "ButtonManager")]
 script = ExtResource("1_e5vbs")
 PlayerGrid = NodePath("PlayerGrid")
 EnemyGrid = NodePath("EnemyGrid")
@@ -22,6 +23,7 @@ Player2Resource = ExtResource("4_ed262")
 Enemy1Resource = ExtResource("5_w4764")
 Enemy2Resource = ExtResource("6_ed262")
 TurnOrderHUD = NodePath("TurnOrderHUD")
+UnitInfoPanel = NodePath("UILayer/UnitInfoPanel")
 ButtonManager = NodePath("ButtonManager")
 
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
@@ -49,3 +51,7 @@ offset_right = 533.0
 offset_bottom = 94.0
 layout_direction = 2
 alignment = 1
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=336115956]
+
+[node name="UnitInfoPanel" parent="UILayer" unique_id=1894613967 instance=ExtResource("10_info")]
