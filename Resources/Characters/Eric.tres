@@ -6,7 +6,6 @@
 script = ExtResource("1_0xj7y")
 Id = "Eric"
 Name = "Eric"
-Side = 1
 Actions = Array[Object]([])
 Resistances = null
 Weaknesses = null

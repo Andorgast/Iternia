@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 using Iternia.Scripts.Core;
@@ -51,7 +52,7 @@ public partial class ButtonManager : Node2D
     {
         foreach (var child in GetChildren())
         {
-            child.QueueFree();
+            child.Free();
         }
         _previousXPos = 0;
     }

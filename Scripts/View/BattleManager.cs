@@ -19,8 +19,10 @@ public partial class BattleManager : Node
     [Export] public PackedScene UnitViewScene { get; set; }
     [Export] public Unit Player1Resource { get; set; }
     [Export] public Unit Player2Resource { get; set; }
-    [Export] public Unit EnemyResource { get; set; }
-
+    [Export] public EnemyUnit Enemy1Resource { get; set; }
+    [Export] public EnemyUnit Enemy2Resource { get; set; }
+    [Export] public TurnOrderHUD TurnOrderHUD{ get; set; }
+    [Export] public UnitInfoPanel UnitInfoPanel { get; set; }
     [Export] public ButtonManager ButtonManager;
 
     private BattleState _state;
@@ -42,10 +44,14 @@ public partial class BattleManager : Node
 
         SpawnUnitFromResource(Player1Resource, TargetSide.Ally, new GridPos(1, 1));
         SpawnUnitFromResource(Player2Resource, TargetSide.Ally, new GridPos(2, 1));
-        SpawnUnitFromResource(EnemyResource, TargetSide.Enemy, new GridPos(0, 1));
+        SpawnUnitFromResource(Enemy1Resource, TargetSide.Enemy, new GridPos(0, 1));
+        SpawnUnitFromResource(Enemy2Resource, TargetSide.Enemy, new GridPos(2, 2));
+
+        TurnOrderHUD?.Setup(_state.AllUnits);
 
         var startEvents = _sim.StartBattle(_state);
         ProcessEvents(startEvents);
+
     }
 
     public override void _UnhandledInput(InputEvent @event)
@@ -89,6 +95,7 @@ public partial class BattleManager : Node
             Vector2 screenPos = grid.Position + grid.GetTileScreenPos(pos);
             
             view.Setup(battleUnit.Id, screenPos);
+            view.SetHealth(battleUnit.Hp, battleUnit.MaxHp);
             _unitViews[battleUnit.Id] = view;
         }
     }
@@ -203,6 +210,7 @@ public partial class BattleManager : Node
                 EnemyGrid.ClearHighlights();
                 _currentAction = null;
                 UpdateMovementHighlights();
+                UpdateUnitInfoPanel();
                 if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
                 if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
                 {
@@ -326,6 +334,7 @@ public partial class BattleManager : Node
                 }
 
                 UpdateMovementHighlights();
+                UpdateUnitInfoPanel();
             }
             else if (evt is TurnStartedEvent turnStarted)
             {
@@ -333,13 +342,21 @@ public partial class BattleManager : Node
                 GD.Print($"DEBUG Budget: MoveSteps={_state.CurrentTurnBudget.MoveSteps}, AP={_state.CurrentTurnBudget.ActionPoints}");
 
                 UpdateMovementHighlights();
+                UpdateUnitInfoPanel();
                 ButtonManager.GenerateButtons(_state.AllUnits[turnStarted.UnitId].Actions);
 
                 if (_state.AllUnits.TryGetValue(turnStarted.UnitId, out var unit) && unit.Side == TargetSide.Enemy)
                 {
-                    GD.Print($"Enemy {unit.Id} turn skipped automatically.");
+                    if (unit is EnemyUnit enemyUnit)
+                    {
+                        GD.Print($"Enemy {unit.Id} executing AI turn.");
+                        var aiEvents = _sim.ExecuteEnemyTurn(_state, enemyUnit);
+                        ProcessEvents(aiEvents);
+                    }
+
                     var nextEvents = _sim.EndTurn(_state, unit.Id);
                     ProcessEvents(nextEvents);
+                    return;
                 }
             }
             else if (evt is TurnEndedEvent turnEnded)
@@ -349,6 +366,15 @@ public partial class BattleManager : Node
                 PlayerGrid?.ClearHighlights();
                 EnemyGrid?.ClearHighlights();
                 ButtonManager.RemoveButtons();
+                UpdateUnitInfoPanel();
+            }
+            else if (evt is EnemyAbilityChosenEvent abilityChosen)
+            {
+                GD.Print($"Enemy {abilityChosen.UnitId} chose ability '{abilityChosen.ActionId}' from tile ({abilityChosen.EnemyPos.row},{abilityChosen.EnemyPos.collum})");
+            }
+            else if (evt is TurnOrderChangedEvent turnOrder)
+            {
+                TurnOrderHUD?.Refresh(turnOrder.OrderUnitIds, turnOrder.ActiveUnitId, turnOrder.RemainingThisRound);
             }
         }
     }
@@ -364,6 +390,20 @@ public partial class BattleManager : Node
 
         var validMoves = MovementRules.GetValidMoves(_state, activeUnit.Id);
         PlayerGrid?.HighlightTiles(validMoves, TileColorReason.MovePossible);
+    }
+
+    private void UpdateUnitInfoPanel()
+    {
+        if (UnitInfoPanel == null) return;
+        
+        if (!string.IsNullOrEmpty(_state.ActiveUnitId) && _state.AllUnits.TryGetValue(_state.ActiveUnitId, out var activeUnit))
+        {
+            UnitInfoPanel.UpdateInfo(activeUnit, _state.CurrentTurnBudget);
+        }
+        else
+        {
+            UnitInfoPanel.UpdateInfo(null, null); // Hide panel
+        }
     }
 
     // private async void SkipEnemyTurn(string unitId)

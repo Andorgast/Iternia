@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_pobh2")
+Id = "Rapier"
 Name = "Rapier"
 InitialOriginSquares = Basis(1.1, 1.1, 0, 1.1, 0, 0, 1.1, 1.1, 0)
 InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 0, 0, 1.1, 0, 0)

@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bk5lpayocj6pk"]
+
+[ext_resource type="Script" uid="uid://b80crexiwwc2g" path="res://Scripts/View/TurnSlot.cs" id="1_htxvi"]
+
+[node name="TurnSlot" type="PanelContainer" unique_id=131848300 node_paths=PackedStringArray("_nameLabel")]
+custom_minimum_size = Vector2(100, 0)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_htxvi")
+_nameLabel = NodePath("Label")
+
+[node name="Label" type="Label" parent="." unique_id=2117647574]
+layout_mode = 2
+text = "UnitName"
+horizontal_alignment = 1

@@ -6,18 +6,24 @@
 [ext_resource type="Script" uid="uid://dnmlre5q5vd8k" path="res://Scripts/View/GridView.cs" id="3_gt16y"]
 [ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
 [ext_resource type="Resource" uid="uid://cyegxaxi540ob" path="res://Resources/Characters/Thalia.tres" id="4_ed262"]
-[ext_resource type="Resource" uid="uid://cd3e2arr1fe07" path="res://Resources/Characters/Eric.tres" id="5_ed262"]
+[ext_resource type="Resource" uid="uid://bhnm1nmvwmwe4" path="res://Resources/Characters/Enemy1.tres" id="5_w4764"]
+[ext_resource type="Resource" uid="uid://103g1ym6pnxb" path="res://Resources/Characters/Enemy2.tres" id="6_ed262"]
+[ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="7_w4764"]
 [ext_resource type="Script" uid="uid://dce6g7e6jeqkk" path="res://Scripts/View/ButtonManager.cs" id="8_w4764"]
 [ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="9_ed262"]
+[ext_resource type="PackedScene" uid="uid://ddy2qxxxxxxx" path="res://Scenes/UnitInfoPanel.tscn" id="10_info"]
 
-[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "ButtonManager")]
+[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD", "UnitInfoPanel", "ButtonManager")]
 script = ExtResource("1_e5vbs")
 PlayerGrid = NodePath("PlayerGrid")
 EnemyGrid = NodePath("EnemyGrid")
 UnitViewScene = ExtResource("2_3gnqe")
 Player1Resource = ExtResource("3_20f6w")
 Player2Resource = ExtResource("4_ed262")
-EnemyResource = ExtResource("5_ed262")
+Enemy1Resource = ExtResource("5_w4764")
+Enemy2Resource = ExtResource("6_ed262")
+TurnOrderHUD = NodePath("TurnOrderHUD")
+UnitInfoPanel = NodePath("UILayer/UnitInfoPanel")
 ButtonManager = NodePath("ButtonManager")
 
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
@@ -37,3 +43,15 @@ script = ExtResource("8_w4764")
 _buttonScene = ExtResource("9_ed262")
 _buttonWidth = 128
 _spacing = 100
+
+[node name="TurnOrderHUD" parent="." unique_id=1648753853 instance=ExtResource("7_w4764")]
+offset_left = 533.0
+offset_top = 34.0
+offset_right = 533.0
+offset_bottom = 94.0
+layout_direction = 2
+alignment = 1
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=336115956]
+
+[node name="UnitInfoPanel" parent="UILayer" unique_id=1894613967 instance=ExtResource("10_info")]
