@@ -27,6 +27,7 @@ public partial class BattleManager : Node
     private BattleSim _sim;
     private Scripts.Models.Action _currentAction;
     private string _enemyToTarget;
+    private Dictionary<string, List<TileEffect>> _unitsToReverseTileEffects;
     
     private readonly Dictionary<string, UnitView> _unitViews = new();
 
@@ -142,7 +143,21 @@ public partial class BattleManager : Node
             {
                 if (_currentAction.TargetType == TargetType.Tile)
                 {
-                    //TODO apply a tile effect
+                    foreach (GridPos tilePosition in TileMask.SquaresToHit(_currentAction.AoiSquares, clickedPos).GetPositions())
+                    {
+                        foreach (TileEffect tileEffect in _currentAction.TileEffects)
+                        {
+                            switch (clickedSide)
+                            {
+                                case TargetSide.Ally:
+                                    PlayerGrid.AddTileEffect(tilePosition, tileEffect);
+                                    break;
+                                case TargetSide.Enemy:
+                                    EnemyGrid.AddTileEffect(tilePosition, tileEffect);
+                                    break;
+                            }
+                        }
+                    }
                     GD.Print("executed an tile action");
                     return;
                 }
@@ -264,6 +279,7 @@ public partial class BattleManager : Node
             ProcessEvents(events);
         }
     }
+    
     private void HandleActionPressed(string buttonId)
     {
         IsCombatDone();
@@ -313,37 +329,10 @@ public partial class BattleManager : Node
 
     private void ExecuteActionOnUnits(string unitId, Stat statToChange, float statChangeAmount, int damage)
     {
-        switch (statToChange)
-        {
-            case Stat.None:
-                break;
-            case Stat.MaxHp:
-                _state.AllUnits[unitId].MaxHp += (int)statChangeAmount;
-                break;
-            case Stat.Attack:
-                _state.AllUnits[unitId].Attack += statChangeAmount;
-                break;
-            case Stat.Speed:
-                _state.AllUnits[unitId].Speed += statChangeAmount;
-                break;
-            case Stat.Aggro:
-                _state.AllUnits[unitId].Aggro += statChangeAmount;
-                break;
-            case Stat.MaxMovement:
-                _state.AllUnits[unitId].MaxMovement += (int)statChangeAmount;
-                break;
-            case Stat.Movement:
-                _state.AllUnits[unitId].Movement += (int)statChangeAmount;
-                break;
-            case Stat.MaxActionPoints:
-                _state.AllUnits[unitId].MaxActionPoints += (int)statChangeAmount;
-                break;
-            case Stat.ActionPoints:
-                _state.AllUnits[unitId].ActionPoints += (int)statChangeAmount;
-                break;
-        }
+        ApplyStatChange(unitId, statToChange, statChangeAmount);
         int oldHp = _state.AllUnits[unitId].Hp;
         int newHp = _state.AllUnits[unitId].TakeDamage((int)MathF.Round(damage * _state.AllUnits[_state.ActiveUnitId].Attack), _currentAction.ActionElement);
+        
         if(oldHp != newHp)
         {
             _unitViews[unitId].SetHealth(newHp, _state.AllUnits[unitId].MaxHp);
@@ -437,6 +426,8 @@ public partial class BattleManager : Node
                 _currentAction = null;
                 PlayerGrid?.ClearHighlights();
                 EnemyGrid?.ClearHighlights();
+                TryExecuteTileAction(PlayerGrid, _state.PlayerFormation);
+                TryExecuteTileAction(EnemyGrid, _state.EnemyFormation);
                 ButtonManager.RemoveButtons();
                 UpdateUnitInfoPanel();
             }
@@ -448,6 +439,88 @@ public partial class BattleManager : Node
             {
                 TurnOrderHUD?.Refresh(turnOrder.OrderUnitIds, turnOrder.ActiveUnitId, turnOrder.RemainingThisRound);
             }
+        }
+    }
+
+    private void TryExecuteTileAction(GridView gridView, Formation formation)
+    {
+        //Reverses all temporary tile effects
+        foreach (KeyValuePair<string, List<TileEffect>> unitId in _unitsToReverseTileEffects)
+        {
+            foreach (TileEffect tileEffect in unitId.Value)
+            {
+                tileEffect.StatChangeAmount *= -1;
+                ApplyStatChange(unitId.Key, tileEffect.StatToChange, tileEffect.StatChangeAmount);
+            }
+            
+            if (_state.AllUnits[unitId.Key].Hp <= 0)
+            {
+                RemoveUnitFromTurnOrder(unitId.Key);
+                _state.AllUnits.Remove(unitId.Key);
+            }
+        }
+        
+        //Executes all current tile effects
+        Dictionary<GridPos, List<TileEffect>> tileEffectsToTry = gridView.GetTilesWEffects();
+        foreach (KeyValuePair<GridPos, List<TileEffect>> tileEffectPair in tileEffectsToTry)
+        {
+            string unitAtPos = formation.GetUnitAt(tileEffectPair.Key);
+            if (unitAtPos != null)
+            {
+                foreach (TileEffect tileEffect in tileEffectPair.Value)
+                {
+                    ApplyStatChange(unitAtPos, tileEffect.StatToChange, tileEffect.StatChangeAmount);
+                    if (tileEffect.Type == TileEffectType.TempStatChange)
+                    {
+                        if (!_unitsToReverseTileEffects.TryAdd(unitAtPos, [tileEffect])) _unitsToReverseTileEffects[unitAtPos].Add(tileEffect);
+                    }
+                }
+                
+                if (_state.AllUnits[unitAtPos].Hp <= 0)
+                {
+                    RemoveUnitFromTurnOrder(unitAtPos);
+                    _state.AllUnits.Remove(unitAtPos);
+                }
+            }
+        }
+    }
+
+    private void ApplyStatChange(string unitId, Stat statToChange, float statChangeAmount)
+    {
+        switch (statToChange)
+        {
+            case Stat.None:
+                break;
+            case Stat.MaxHp:
+                if (_state.AllUnits[unitId].MaxHp + (int)statChangeAmount <= 0) _state.AllUnits[unitId].MaxHp = 1;
+                else _state.AllUnits[unitId].MaxHp += (int)statChangeAmount;
+                if (_state.AllUnits[unitId].MaxHp < _state.AllUnits[unitId].Hp) _state.AllUnits[unitId].Hp = _state.AllUnits[unitId].MaxHp;
+                break;
+            case Stat.Hp:
+                if (_state.AllUnits[unitId].Hp + (int)statChangeAmount > _state.AllUnits[unitId].MaxHp) _state.AllUnits[unitId].Hp = _state.AllUnits[unitId].MaxHp;
+                else _state.AllUnits[unitId].Hp += (int)statChangeAmount;
+                break;
+            case Stat.Attack:
+                _state.AllUnits[unitId].Attack += statChangeAmount;
+                break;
+            case Stat.Speed:
+                _state.AllUnits[unitId].Speed += statChangeAmount;
+                break;
+            case Stat.Aggro:
+                _state.AllUnits[unitId].Aggro += statChangeAmount;
+                break;
+            case Stat.MaxMovement:
+                _state.AllUnits[unitId].MaxMovement += (int)statChangeAmount;
+                break;
+            case Stat.Movement:
+                _state.AllUnits[unitId].Movement += (int)statChangeAmount;
+                break;
+            case Stat.MaxActionPoints:
+                _state.AllUnits[unitId].MaxActionPoints += (int)statChangeAmount;
+                break;
+            case Stat.ActionPoints:
+                _state.AllUnits[unitId].ActionPoints += (int)statChangeAmount;
+                break;
         }
     }
 

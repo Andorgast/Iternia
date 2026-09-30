@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Godot;
 using Iternia.Scripts.Core;
+using Iternia.Scripts.Models;
 
 namespace Iternia.View;
 
@@ -14,7 +15,8 @@ public partial class BattleTile : Area2D
 
     private Sprite2D _sprite;
     public GridPos LogicalPos { get; private set; }
-    
+    public List<TileEffect> TileEffectList { get; set; }
+
     private bool _isHovered;
 
     public override void _Ready()
