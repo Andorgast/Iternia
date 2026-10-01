@@ -1,7 +1,10 @@
 [gd_resource type="Resource" script_class="TileEffect" format=3 uid="uid://by53fs8nptal6"]
 
-[ext_resource type="Script" uid="uid://dutsmwrdmyg0v" path="res://Scripts/Models/TileEffect.cs" id="1_7jfpj"]
+[ext_resource type="Script" uid="uid://dutsmwrdmyg0v" path="res://Scripts/Models/TileEffect.cs" id="1_ixnxm"]
 
 [resource]
-script = ExtResource("1_7jfpj")
+script = ExtResource("1_ixnxm")
+Name = "SpeedDecrease"
+StatToChange = 4
+StatChangeAmount = -3.0
 metadata/_custom_type_script = "uid://dutsmwrdmyg0v"

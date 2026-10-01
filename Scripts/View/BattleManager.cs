@@ -27,7 +27,7 @@ public partial class BattleManager : Node
     private BattleSim _sim;
     private Scripts.Models.Action _currentAction;
     private string _enemyToTarget;
-    private Dictionary<string, List<TileEffect>> _unitsToReverseTileEffects;
+    private Dictionary<string, List<TileEffect>> _unitsToReverseTileEffects = new();
     
     private readonly Dictionary<string, UnitView> _unitViews = new();
 
@@ -141,7 +141,7 @@ public partial class BattleManager : Node
                 _currentAction.OriginSquares.GetPositions().ToList().Contains(pos)
             )
             {
-                if (_currentAction.TargetType == TargetType.Tile)
+                if (_currentAction.TargetType == TargetType.Tile && _state.CurrentTurnBudget.SpendMainAction())
                 {
                     foreach (GridPos tilePosition in TileMask.SquaresToHit(_currentAction.AoiSquares, clickedPos).GetPositions())
                     {
@@ -159,12 +159,13 @@ public partial class BattleManager : Node
                         }
                     }
                     GD.Print("executed an tile action");
+                    UpdateBattleVisuals();
                     return;
                 }
                 string targetId = null;
                 if (_currentAction.TargetSide == TargetSide.Ally || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget != null)) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
                 else if (_currentAction.TargetSide == TargetSide.Enemy || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget == null)) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
-                if(targetId != null)
+                if(targetId != null && TryIsUnitAlive(targetId))
                 {
                     if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange != AllyTargetRange.Self && _enemyToTarget != null)
                     {
@@ -262,6 +263,21 @@ public partial class BattleManager : Node
         }
         ProcessEvents(events2);
         ProcessEvents(events3);
+    }
+
+    private bool TryIsUnitAlive(string unitId)
+    {
+        int hp;
+        try
+        {
+            hp = _state.AllUnits[unitId].Hp;
+        }
+        catch (KeyNotFoundException)
+        {
+            return false;
+        }
+        if (hp > 0) return true;
+        return false;
     }
 
     private void UpdateBattleVisuals()
@@ -447,16 +463,19 @@ public partial class BattleManager : Node
         //Reverses all temporary tile effects
         foreach (KeyValuePair<string, List<TileEffect>> unitId in _unitsToReverseTileEffects)
         {
-            foreach (TileEffect tileEffect in unitId.Value)
+            if(TryIsUnitAlive(unitId.Key))
             {
-                tileEffect.StatChangeAmount *= -1;
-                ApplyStatChange(unitId.Key, tileEffect.StatToChange, tileEffect.StatChangeAmount);
-            }
-            
-            if (_state.AllUnits[unitId.Key].Hp <= 0)
-            {
-                RemoveUnitFromTurnOrder(unitId.Key);
-                _state.AllUnits.Remove(unitId.Key);
+                foreach (TileEffect tileEffect in unitId.Value)
+                {
+                    tileEffect.StatChangeAmount *= -1;
+                    ApplyStatChange(unitId.Key, tileEffect.StatToChange, tileEffect.StatChangeAmount);
+                }
+
+                if (_state.AllUnits[unitId.Key].Hp <= 0)
+                {
+                    RemoveUnitFromTurnOrder(unitId.Key);
+                    _state.AllUnits.Remove(unitId.Key);
+                }
             }
         }
         
@@ -465,8 +484,9 @@ public partial class BattleManager : Node
         foreach (KeyValuePair<GridPos, List<TileEffect>> tileEffectPair in tileEffectsToTry)
         {
             string unitAtPos = formation.GetUnitAt(tileEffectPair.Key);
-            if (unitAtPos != null)
+            if (unitAtPos != null && TryIsUnitAlive(unitAtPos))
             {
+                int oldHp = _state.AllUnits[unitAtPos].Hp;
                 foreach (TileEffect tileEffect in tileEffectPair.Value)
                 {
                     ApplyStatChange(unitAtPos, tileEffect.StatToChange, tileEffect.StatChangeAmount);
@@ -475,7 +495,11 @@ public partial class BattleManager : Node
                         if (!_unitsToReverseTileEffects.TryAdd(unitAtPos, [tileEffect])) _unitsToReverseTileEffects[unitAtPos].Add(tileEffect);
                     }
                 }
-                
+                int newHp = _state.AllUnits[unitAtPos].Hp;
+                if (oldHp != newHp)
+                {
+                    _unitViews[unitAtPos].SetHealth(newHp, _state.AllUnits[unitAtPos].MaxHp);
+                }
                 if (_state.AllUnits[unitAtPos].Hp <= 0)
                 {
                     RemoveUnitFromTurnOrder(unitAtPos);

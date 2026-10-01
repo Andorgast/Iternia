@@ -15,7 +15,7 @@ public partial class BattleTile : Area2D
 
     private Sprite2D _sprite;
     public GridPos LogicalPos { get; private set; }
-    public List<TileEffect> TileEffectList { get; set; }
+    public List<TileEffect> TileEffectList { get; set; } = [];
 
     private bool _isHovered;
 

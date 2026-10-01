@@ -4,4 +4,8 @@
 
 [resource]
 script = ExtResource("1_13aay")
+Name = "TickDamage"
+Type = 1
+StatToChange = 2
+StatChangeAmount = -1.0
 metadata/_custom_type_script = "uid://dutsmwrdmyg0v"

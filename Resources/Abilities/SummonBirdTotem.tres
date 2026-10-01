@@ -1,12 +1,15 @@
 [gd_resource type="Resource" script_class="Action" format=3 uid="uid://dgmnk4s2be8al"]
 
+[ext_resource type="Resource" uid="uid://c7c18svncjkhp" path="res://Resources/Abilities/Tile effects/Heal.tres" id="1_hxxrq"]
 [ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_jpyox"]
 
 [resource]
 script = ExtResource("1_jpyox")
 Name = "Summon bird"
 InitialOriginSquares = Basis(0, 0, 1.1, 0, 1.1, 1.1, 0, 0, 1.1)
-InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 1.1, 0, 1.1, 1.1, 0)
+InitialTargetSquares = Basis(0, 1.1, 0, 1.1, 0, 1.1, 0, 1.1, 0)
+InitialAoiSquares = Basis(0, 0, 0, 0, 1.1, 0, 0, 0, 0)
+AllyTargetRange = 2
+TileEffects = Array[Object]([ExtResource("1_hxxrq")])
 ActionElement = 1
-Damage = -2
 metadata/_custom_type_script = "uid://cl6mib0yubm5u"
