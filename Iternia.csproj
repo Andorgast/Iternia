@@ -7,4 +7,7 @@
   <ItemGroup>
     <Folder Include="Scenes\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Characters\Aster.tres" />
+  </ItemGroup>
 </Project>

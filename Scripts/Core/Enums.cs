@@ -21,6 +21,7 @@ public enum Stat
 {
     None,
     MaxHp,
+    Hp,
     Attack,
     Speed,
     Aggro,
@@ -53,4 +54,11 @@ public enum TileColorReason
     TargetForAction,
     Hover,
     Reset
+}
+
+public enum TileEffectType
+{
+    TempStatChange,
+    PermStatChange,
+    TileRemove
 }

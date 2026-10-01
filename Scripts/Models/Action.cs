@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using Godot.Collections;
 using Iternia.Scripts.Core;
 
 namespace Iternia.Scripts.Models;
@@ -14,6 +15,7 @@ public partial class Action : Resource
     [Export] protected Basis InitialAoiSquares;
     [Export] public TargetType TargetType;
     [Export] public AllyTargetRange AllyTargetRange = AllyTargetRange.DoesntTargetAlly;
+    [Export] public Array<TileEffect> TileEffects;
     [Export] public Element ActionElement;
     [Export] public TargetSide TargetSide;
     [Export] public Stat StatToChange;

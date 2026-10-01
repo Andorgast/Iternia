@@ -1,6 +1,8 @@
 using Godot;
 using Iternia.Scripts.Core;
 using System.Collections.Generic;
+using System.Linq;
+using Iternia.Scripts.Models;
 
 namespace Iternia.View;
 
@@ -42,6 +44,21 @@ public partial class GridView : Node2D
                 tile.UpdateVisuals(false, reason, true);
             }
         }
+    }
+
+    public Dictionary<GridPos, List<TileEffect>> GetTilesWEffects()
+    {
+        Dictionary<GridPos, List<TileEffect>> tempList = [];
+        for (int i = 0; i < _tiles.Count; i++)
+        {
+            if (_tiles.Values.ToList()[i].TileEffectList.Any()) tempList.Add(_tiles.Keys.ToList()[i], _tiles.Values.ToList()[i].TileEffectList);
+        }
+        return tempList;
+    }
+
+    public void AddTileEffect(GridPos position, TileEffect tileEffectToApply)
+    {
+        _tiles[position].TileEffectList.Add(tileEffectToApply);
     }
     
     private void GenerateGrid()
