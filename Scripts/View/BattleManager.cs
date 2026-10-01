@@ -28,6 +28,7 @@ public partial class BattleManager : Node
     private Scripts.Models.Action _currentAction;
     private string _enemyToTarget;
     private Dictionary<string, List<TileEffect>> _unitsToReverseTileEffects = new();
+    private bool _combatEnded = false;
     
     private readonly Dictionary<string, UnitView> _unitViews = new();
 
@@ -366,28 +367,38 @@ public partial class BattleManager : Node
 
     private void IsCombatDone()
     {
+        if (_combatEnded) return;
+
         bool playerAlive = false;
         bool enemyAlive = false;
         foreach (Unit unit in _state.AllUnits.Values)
         {
             switch (unit.Side)
             {
-                case TargetSide.Ally:
-                    playerAlive = true;
-                    break;
-                case TargetSide.Enemy:
-                    enemyAlive = true;
-                    break;
+                case TargetSide.Ally:   playerAlive = true; break;
+                case TargetSide.Enemy:  enemyAlive = true;  break;
             }
         }
 
-        if (!enemyAlive) ; //TODO trigger win state
-        else if (!playerAlive) ;//TODO trigger lose state
+        if (!enemyAlive)
+        {
+            _combatEnded = true;
+            GD.Print("=== COMBAT WON! All enemies defeated. ===");
+            // TODO: toon win-scherm
+        }
+        else if (!playerAlive)
+        {
+            _combatEnded = true;
+            GD.Print("=== COMBAT LOST! All players defeated. ===");
+            // TODO: toon lose-scherm
+        }
     }
 
     private void ProcessEvents(IReadOnlyList<BattleEvent> events)
     {
+        if (_combatEnded) return;
         IsCombatDone();
+        if (_combatEnded) return;
         foreach (var evt in events)
         {
             if (evt is CommandFailedEvent fail)
@@ -449,7 +460,33 @@ public partial class BattleManager : Node
             }
             else if (evt is EnemyAbilityChosenEvent abilityChosen)
             {
-                GD.Print($"Enemy {abilityChosen.UnitId} chose ability '{abilityChosen.ActionId}' from tile ({abilityChosen.EnemyPos.row},{abilityChosen.EnemyPos.collum})");
+                GD.Print($"Enemy {abilityChosen.UnitId} uses '{abilityChosen.ActionId}' targeting ({abilityChosen.TargetPos.row},{abilityChosen.TargetPos.collum})");
+
+                var enemyAction = _state.AllUnits.TryGetValue(abilityChosen.UnitId, out var attacker)
+                    ? attacker.Actions.FirstOrDefault(a => a.Id == abilityChosen.ActionId)
+                    : null;
+
+                if (enemyAction != null)
+                {
+                    _currentAction = enemyAction;
+
+                    if (enemyAction.AoiSquares.GetPositions().Any())
+                    {
+                        foreach (var aoePos in TileMask.SquaresToHit(enemyAction.AoiSquares, abilityChosen.TargetPos).GetPositions())
+                        {
+                            string aoeTarget = _state.PlayerFormation.GetUnitAt(aoePos);
+                            if (aoeTarget != null && TryIsUnitAlive(aoeTarget))
+                                ExecuteActionOnUnits(aoeTarget, enemyAction.SecondaryStatToChange, enemyAction.SecondaryStatChangeAmount, enemyAction.SecondaryDamage);
+                        }
+                    }
+
+                    string mainTarget = _state.PlayerFormation.GetUnitAt(abilityChosen.TargetPos);
+                    if (mainTarget != null && TryIsUnitAlive(mainTarget))
+                        ExecuteActionOnUnits(mainTarget, enemyAction.StatToChange, enemyAction.StatChangeAmount, enemyAction.Damage);
+
+                    _currentAction = null;
+                    UpdateUnitInfoPanel();
+                }
             }
             else if (evt is TurnOrderChangedEvent turnOrder)
             {

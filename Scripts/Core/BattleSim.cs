@@ -59,11 +59,11 @@ public class BattleSim
                 events.Add(evt);
         }
 
-        var chosenAction = EnemyAI.PickAbility(state, enemy);
-        if (chosenAction != null)
+        var abilityPick = EnemyAI.PickAbility(state, enemy);
+        if (abilityPick.HasValue)
         {
             MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos);
-            events.Add(new EnemyAbilityChosenEvent(enemy.Id, chosenAction.Id, enemyPos));
+            events.Add(new EnemyAbilityChosenEvent(enemy.Id, abilityPick.Value.Action.Id, enemyPos, abilityPick.Value.TargetPos));
         }
 
         return events;
@@ -82,16 +82,22 @@ public class BattleSim
             }
         }
 
-        if (state.TurnQueue.Count > 0)
+        string nextUnitId = null;
+        while (state.TurnQueue.Count > 0)
         {
-            string nextUnitId = state.TurnQueue.Dequeue(); 
-            state.ActiveUnitId = nextUnitId;
-
-            if (state.AllUnits.TryGetValue(nextUnitId, out var activeUnit))
+            var candidate = state.TurnQueue.Dequeue();
+            if (state.AllUnits.ContainsKey(candidate))
             {
-                state.CurrentTurnBudget.Reset(activeUnit);
+                nextUnitId = candidate;
+                break;
             }
+            GD.Print($"[AdvanceTurn] Skipping dead unit '{candidate}' in queue.");
+        }
 
+        if (nextUnitId != null)
+        {
+            state.ActiveUnitId = nextUnitId;
+            state.CurrentTurnBudget.Reset(state.AllUnits[nextUnitId]);
             events.Add(new TurnStartedEvent(nextUnitId));
             var remaining = new List<string>(state.TurnQueue);
             events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, nextUnitId, remaining));
