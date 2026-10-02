@@ -81,30 +81,11 @@ public class BattleSim
                 state.TurnQueue.Enqueue(id);
             }
         }
-
-        string nextUnitId = null;
-        while (state.TurnQueue.Count > 0)
-        {
-            var candidate = state.TurnQueue.Dequeue();
-            if (state.AllUnits.ContainsKey(candidate))
-            {
-                nextUnitId = candidate;
-                break;
-            }
-            GD.Print($"[AdvanceTurn] Skipping dead unit '{candidate}' in queue.");
-        }
-
-        if (nextUnitId != null)
-        {
-            state.ActiveUnitId = nextUnitId;
-            state.CurrentTurnBudget.Reset(state.AllUnits[nextUnitId]);
-            events.Add(new TurnStartedEvent(nextUnitId));
-            var remaining = new List<string>(state.TurnQueue);
-            events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, nextUnitId, remaining));
-        }
-        else
-        {
-            state.ActiveUnitId = null;
-        }
+        
+        state.ActiveUnitId = nextUnitId;
+        state.CurrentTurnBudget.Reset(state.AllUnits[nextUnitId]);
+        events.Add(new TurnStartedEvent(nextUnitId));
+        var remaining = new List<string>(state.TurnQueue);
+        events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, nextUnitId, remaining));
     }
 }
