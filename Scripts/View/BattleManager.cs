@@ -101,36 +101,25 @@ public partial class BattleManager : Node
         }
     }
 
-    private bool TryExecuteAction(GridPos pos, GridPos clickedPos, TargetSide clickedSide)
+    private bool TryExecuteAction(GridPos pos, TargetSide originSide, GridPos clickedPos)
     {
         if (_currentAction != null)
         {
+            TargetSide globalActionTargetSide;
             if (
+                (originSide == TargetSide.Ally && _currentAction.TargetSide == TargetSide.Enemy) || 
+                (originSide == TargetSide.Ally && _currentAction.TargetSide == TargetSide.Both) ||
+                (originSide == TargetSide.Enemy && _currentAction.TargetSide == TargetSide.Ally)
+                ) globalActionTargetSide = TargetSide.Enemy;
+            else globalActionTargetSide = TargetSide.Ally;
+            
+            if (_currentAction.OriginSquares.GetPositions().ToList().Contains(pos) &&
                 (
-                    _currentAction.TargetSquares.GetPositions().ToList().Contains(clickedPos) 
-                    ||
-                    _currentAction.AllyTargetRange == AllyTargetRange.Full 
-                    || 
-                    (
-                        _currentAction.AllyTargetRange == AllyTargetRange.Self 
-                        && 
-                        clickedPos == pos
-                    ) 
-                    ||
-                    (
-                        _currentAction.AllyTargetRange == AllyTargetRange.NextToSelf 
-                        && 
-                        TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).HasPos(clickedPos)
-                    )
-                ) 
-                && 
-                (
-                    clickedSide == _currentAction.TargetSide 
-                    ||
-                    _currentAction.TargetSide == TargetSide.Both
+                    (_currentAction.TargetSquares.GetPositions().ToList().Contains(clickedPos)) || 
+                    (_currentAction.AllyTargetRange == AllyTargetRange.Full) ||
+                    (_currentAction.AllyTargetRange == AllyTargetRange.Self && clickedPos == pos) ||
+                    (_currentAction.AllyTargetRange == AllyTargetRange.NextToSelf && TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).HasPos(clickedPos))
                 )
-                &&
-                _currentAction.OriginSquares.GetPositions().ToList().Contains(pos)
             )
             {
                 if (_currentAction.TargetType == TargetType.Tile && _state.CurrentTurnBudget.SpendMainAction())
@@ -139,7 +128,7 @@ public partial class BattleManager : Node
                     {
                         foreach (TileEffect tileEffect in _currentAction.TileEffects)
                         {
-                            switch (clickedSide)
+                            switch (globalActionTargetSide)
                             {
                                 case TargetSide.Ally:
                                     PlayerGrid.AddTileEffect(tilePosition, tileEffect);
@@ -155,8 +144,8 @@ public partial class BattleManager : Node
                     return true;
                 }
                 string targetId = null;
-                if (_currentAction.TargetSide == TargetSide.Ally || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget != null)) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
-                else if (_currentAction.TargetSide == TargetSide.Enemy || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget == null)) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
+                if (globalActionTargetSide == TargetSide.Ally || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget != null)) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
+                else if (globalActionTargetSide == TargetSide.Enemy || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget == null)) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
                 if(targetId != null && TryIsUnitAlive(targetId))
                 {
                     if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange != AllyTargetRange.Self && _enemyToTarget != null)
@@ -194,7 +183,7 @@ public partial class BattleManager : Node
                         UpdateBattleVisuals();
                         return true;
                     }
-                    else if (_enemyToTarget != null)
+                    else if (_enemyToTarget != null && _currentAction.TargetType == TargetType.EnemyAndAlly)
                     {
                         if(_state.CurrentTurnBudget.SpendMainAction())
                         {
@@ -214,8 +203,8 @@ public partial class BattleManager : Node
                         foreach (var position in TileMask.SquaresToHit(_currentAction.AoiSquares, clickedPos).GetPositions())
                         {
                             string secondaryTarget = null;
-                            if (_currentAction.TargetSide == TargetSide.Ally || _currentAction.TargetSide == TargetSide.Both) secondaryTarget = _state.PlayerFormation.GetUnitAt(position);
-                            else if (_currentAction.TargetSide == TargetSide.Enemy) secondaryTarget = _state.EnemyFormation.GetUnitAt(position);
+                            if (globalActionTargetSide == TargetSide.Ally || _currentAction.TargetSide == TargetSide.Both) secondaryTarget = _state.PlayerFormation.GetUnitAt(position);
+                            else secondaryTarget = _state.EnemyFormation.GetUnitAt(position);
                             if (secondaryTarget != null) ExecuteActionOnUnits(secondaryTarget, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
                         }
                     }
@@ -254,10 +243,10 @@ public partial class BattleManager : Node
 
         GD.Print($"  > activeUnit.Side={activeUnit.Side}, clickedSide={clickedSide}");
         
-        if (_currentAction != null)
+        if (_currentAction != null && (clickedSide == _currentAction.TargetSide || _currentAction.TargetSide == TargetSide.Both))
         {
             MovementRules.TryFindUnitPosition(_state, _state.ActiveUnitId, out Formation formation, out GridPos pos);
-            TryExecuteAction(pos, clickedPos, clickedSide);
+            TryExecuteAction(pos, TargetSide.Ally, clickedPos);
             return;
         }
 
@@ -276,7 +265,7 @@ public partial class BattleManager : Node
         ProcessEvents(events3);
     }
 
-    private bool TryIsUnitAlive(string unitId)
+    public bool TryIsUnitAlive(string unitId)
     {
         int hp;
         try
@@ -452,9 +441,7 @@ public partial class BattleManager : Node
                         var aiEvents = _sim.ExecuteEnemyTurn(_state, enemyUnit);
                         ProcessEvents(aiEvents);
                     }
-
-                    var nextEvents = _sim.EndTurn(_state, unit.Id);
-                    ProcessEvents(nextEvents);
+                    
                     return;
                 }
             }
@@ -471,29 +458,20 @@ public partial class BattleManager : Node
             }
             else if (evt is EnemyAbilityChosenEvent abilityChosen)
             {
-                GD.Print($"Enemy {abilityChosen.UnitId} uses '{abilityChosen.ActionId}' targeting ({abilityChosen.TargetPos.row},{abilityChosen.TargetPos.collum})");
+                _currentAction = abilityChosen.Action;
+                GD.Print(_currentAction);
+                GD.Print($"Enemy {abilityChosen.UnitId} uses '{_currentAction}' targeting ({abilityChosen.TargetPos.row},{abilityChosen.TargetPos.collum})");
 
-                var enemyAction = _state.AllUnits.TryGetValue(abilityChosen.UnitId, out var attacker)
-                    ? attacker.Actions.FirstOrDefault(a => a.Id == abilityChosen.ActionId)
-                    : null;
-
-                if (enemyAction != null)
+                bool actionSuccess = TryExecuteAction(abilityChosen.EnemyPos, TargetSide.Enemy, abilityChosen.TargetPos);
+                
+                if (actionSuccess && _currentAction.TargetType == TargetType.EnemyAndAlly)
                 {
-                    MovementRules.TryFindUnitPosition(_state, abilityChosen.UnitId, out Formation formation, out GridPos pos);
-                    _currentAction = enemyAction;
-                    if (enemyAction.TargetSide == TargetSide.Ally) TryExecuteAction(pos , abilityChosen.TargetPos, TargetSide.Enemy);
-                    else if (enemyAction.TargetSide == TargetSide.Enemy) TryExecuteAction(pos, abilityChosen.TargetPos, TargetSide.Ally);
-                    else
-                    {
-                        TryExecuteAction(pos, abilityChosen.TargetPos, TargetSide.Ally);
-                        //TODO get the propper secondary target
-                        GridPos secondTarget = new GridPos(0, 0);
-                        TryExecuteAction(pos, secondTarget, TargetSide.Enemy);
-                    };
-
-                    _currentAction = null;
-                    UpdateUnitInfoPanel();
+                    //TODO get the propper secondary target
+                    GridPos secondTarget = new GridPos(0, 0);
+                    TryExecuteAction(abilityChosen.EnemyPos, TargetSide.Enemy, secondTarget);
                 }
+                _currentAction = null;
+                UpdateUnitInfoPanel();
             }
             else if (evt is TurnOrderChangedEvent turnOrder)
             {
@@ -563,6 +541,7 @@ public partial class BattleManager : Node
             case Stat.MaxHp:
                 if (_state.AllUnits[unitId].MaxHp + (int)statChangeAmount <= 0) _state.AllUnits[unitId].MaxHp = 1;
                 else _state.AllUnits[unitId].MaxHp += (int)statChangeAmount;
+                if (statChangeAmount > 0) _state.AllUnits[unitId].Hp += (int)statChangeAmount;
                 if (_state.AllUnits[unitId].MaxHp < _state.AllUnits[unitId].Hp) _state.AllUnits[unitId].Hp = _state.AllUnits[unitId].MaxHp;
                 break;
             case Stat.Hp:
