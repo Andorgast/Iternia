@@ -4,11 +4,16 @@
 
 [resource]
 script = ExtResource("1_3r3pl")
+Id = "Blood toss"
 Name = "Blood toss"
 InitialOriginSquares = Basis(0, 0, 0, 0, 1.1, 1.1, 0, 0, 0)
 InitialTargetSquares = Basis(0, 1.1, 1.1, 1.1, 0, 1.1, 0, 1.1, 1.1)
+InitialAoiSquares = Basis(0, 0, 0, 0, 1.1, 0, 0, 0, 0)
+TargetType = 1
+AllyTargetRange = 1
+TileEffects = null
 ActionElement = 5
-TargetSide = 1
+TargetSide = 2
 Damage = 12
 SecondaryDamage = 4
 metadata/_custom_type_script = "uid://cl6mib0yubm5u"

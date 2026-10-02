@@ -4,13 +4,15 @@
 
 [resource]
 script = ExtResource("1_6cul6")
+Id = "Heal"
 Name = "Heal"
 InitialOriginSquares = Basis(0, 1.1, 0, 0, 1.1, 1.1, 0, 1.1, 0)
 InitialTargetSquares = Basis(1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1)
-InitialAoiSquares = Basis(0, 0, 0, 0, 0, 1.1, 0, 0, 0)
+InitialAoiSquares = Basis(0, 0, 0, 0, 1.1, 0, 0, 0, 0)
 TargetType = 1
 AllyTargetRange = 0
+TileEffects = null
 ActionElement = 1
-Damage = -4
-SecondaryDamage = -2
+StatToChange = 2
+StatChangeAmount = 4.0
 metadata/_custom_type_script = "uid://cl6mib0yubm5u"

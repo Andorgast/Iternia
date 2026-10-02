@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://cotglxlhthlnq"]
+
+[ext_resource type="Resource" uid="uid://c3ddqkl7xjv7t" path="res://Resources/Abilities/Tile effects/TickDamage.tres" id="1_tickdmg"]
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="2_ftotem"]
+
+[resource]
+script = ExtResource("2_ftotem")
+Id = "FireTotem"
+Name = "Fire Totem"
+InitialOriginSquares = Basis(0, 0, 1.1, 0, 1.1, 1.1, 0, 0, 1.1)
+InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 1.1, 0, 1.1, 0, 0)
+InitialAoiSquares = Basis(0, 1.1, 0, 0, 1.1, 0, 0, 1.1, 0)
+TileEffects = Array[Resource]([ExtResource("1_tickdmg")])
+TargetSide = 1
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

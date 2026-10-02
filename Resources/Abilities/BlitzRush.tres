@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://blitzrush_abil_001"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_blitz"]
+
+[resource]
+script = ExtResource("1_blitz")
+Id = "BlitzRush"
+Name = "Blitz Rush"
+InitialOriginSquares = Basis(1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1)
+InitialTargetSquares = Basis(1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1)
+TileEffects = null
+TargetType = 1
+AllyTargetRange = 0
+ActionElement = 4
+TargetSide = 0
+StatToChange = 4
+StatChangeAmount = 2.0
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

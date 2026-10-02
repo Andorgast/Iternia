@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TileEffect" format=3 uid="uid://ctoxox2gs8f8v"]
+
+[ext_resource type="Script" uid="uid://dutsmwrdmyg0v" path="res://Scripts/Models/TileEffect.cs" id="1_147os"]
+
+[resource]
+script = ExtResource("1_147os")
+Name = "Aggro"
+StatToChange = 5
+StatChangeAmount = 2.0
+metadata/_custom_type_script = "uid://dutsmwrdmyg0v"

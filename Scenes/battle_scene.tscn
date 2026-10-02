@@ -2,13 +2,15 @@
 
 [ext_resource type="Script" uid="uid://bu8ujiyja18y3" path="res://Scripts/View/BattleManager.cs" id="1_e5vbs"]
 [ext_resource type="PackedScene" uid="uid://caloj1bhbytom" path="res://Scenes/unit_view.tscn" id="2_3gnqe"]
-[ext_resource type="Resource" uid="uid://baxeffxwsupoe" path="res://Resources/Characters/Frederic.tres" id="3_20f6w"]
 [ext_resource type="Script" uid="uid://dnmlre5q5vd8k" path="res://Scripts/View/GridView.cs" id="3_gt16y"]
+[ext_resource type="Resource" uid="uid://dabyavin10wi3" path="res://Resources/Characters/Aster.tres" id="3_xdap8"]
 [ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
-[ext_resource type="Resource" uid="uid://cyegxaxi540ob" path="res://Resources/Characters/Thalia.tres" id="4_ed262"]
+[ext_resource type="Resource" uid="uid://cd3e2arr1fe07" path="res://Resources/Characters/Eric.tres" id="4_f856b"]
+[ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="5_778cw"]
 [ext_resource type="Resource" uid="uid://bhnm1nmvwmwe4" path="res://Resources/Enemies/Enemy1.tres" id="5_w4764"]
 [ext_resource type="Resource" uid="uid://103g1ym6pnxb" path="res://Resources/Enemies/Enemy2.tres" id="6_ed262"]
 [ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="7_w4764"]
+[ext_resource type="Resource" uid="uid://bflrjlrvnbj1x" path="res://Resources/Enemies/Enemy3.tres" id="8_vuvll"]
 [ext_resource type="Script" uid="uid://dce6g7e6jeqkk" path="res://Scripts/View/ButtonManager.cs" id="8_w4764"]
 [ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="9_ed262"]
 [ext_resource type="PackedScene" uid="uid://ddy2qxxxxxxx" path="res://Scenes/UnitInfoPanel.tscn" id="10_info"]
@@ -18,10 +20,12 @@ script = ExtResource("1_e5vbs")
 PlayerGrid = NodePath("PlayerGrid")
 EnemyGrid = NodePath("EnemyGrid")
 UnitViewScene = ExtResource("2_3gnqe")
-Player1Resource = ExtResource("3_20f6w")
-Player2Resource = ExtResource("4_ed262")
+Player1Resource = ExtResource("3_xdap8")
+Player2Resource = ExtResource("4_f856b")
+Player3Resource = ExtResource("5_778cw")
 Enemy1Resource = ExtResource("5_w4764")
 Enemy2Resource = ExtResource("6_ed262")
+Enemy3Resource = ExtResource("8_vuvll")
 TurnOrderHUD = NodePath("TurnOrderHUD")
 UnitInfoPanel = NodePath("UILayer/UnitInfoPanel")
 ButtonManager = NodePath("ButtonManager")
