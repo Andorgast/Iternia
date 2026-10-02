@@ -333,6 +333,7 @@ public partial class BattleManager : Node
 
     private void RemoveUnitFromTurnOrder(string idToRemove)
     {
+        _state.CurrentRoundOrder.Remove(idToRemove);
         List<string> tempQueueAsList = _state.TurnQueue.ToList();
         tempQueueAsList.Remove(idToRemove);
         _state.TurnQueue.Clear();
@@ -498,6 +499,7 @@ public partial class BattleManager : Node
                 int newHp = _state.AllUnits[unitAtPos].Hp;
                 if (oldHp != newHp)
                 {
+                    GD.Print($"Hp changed by {oldHp - newHp}");
                     _unitViews[unitAtPos].SetHealth(newHp, _state.AllUnits[unitAtPos].MaxHp);
                 }
                 if (_state.AllUnits[unitAtPos].Hp <= 0)
