@@ -28,7 +28,7 @@ public enum Stat
     MaxMovement,
     Movement,
     MaxActionPoints,
-    ActionPoints
+    ActionPoints    
 }
 
 public enum TargetType

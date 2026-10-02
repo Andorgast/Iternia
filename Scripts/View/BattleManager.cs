@@ -24,6 +24,7 @@ public partial class BattleManager : Node
     [Export] public EnemyUnit Enemy3Resource { get; set; }
     [Export] public TurnOrderHUD TurnOrderHUD{ get; set; }
     [Export] public UnitInfoPanel UnitInfoPanel { get; set; }
+    [Export ] public UnitAbilityInfoPanel UnitAbilityInfoPanel { get; set; }
     [Export] public ButtonManager ButtonManager;
 
     private BattleState _state;
@@ -43,7 +44,12 @@ public partial class BattleManager : Node
 
         if (PlayerGrid != null) PlayerGrid.OnTileClicked += HandleTileClicked;
         if (EnemyGrid != null) EnemyGrid.OnTileClicked += HandleTileClicked;
-        if (ButtonManager != null) ButtonManager.OnButtonClicked += HandleActionPressed;
+        if (ButtonManager != null) 
+        {
+            ButtonManager.OnButtonClicked += HandleActionPressed;
+            ButtonManager.OnButtonHovered += HandleActionHovered;
+            ButtonManager.OnButtonUnhovered += HandleActionUnhovered;
+        }
 
         SpawnUnitFromResource(Player1Resource, TargetSide.Ally, new GridPos(1, 0));
         SpawnUnitFromResource(Player2Resource, TargetSide.Ally, new GridPos(2, 1));
@@ -302,6 +308,7 @@ public partial class BattleManager : Node
         _currentAction = null;
         UpdateMovementHighlights();
         UpdateUnitInfoPanel();
+        UpdateAbilityInfoPanel();
         if(_state.CurrentTurnBudget.ActionPoints <= 0) ButtonManager.RemoveButtons();
         if (_state.CurrentTurnBudget.ActionPoints <= 0 && _state.CurrentTurnBudget.MoveSteps <= 0)
         {
@@ -343,7 +350,8 @@ public partial class BattleManager : Node
             _enemyToTarget = null;
             UpdateMovementHighlights();
         }
-        
+
+        UpdateAbilityInfoPanel();
     }
 
     private void RemoveUnitFromTurnOrder(string idToRemove)
@@ -621,6 +629,42 @@ public partial class BattleManager : Node
         else
         {
             UnitInfoPanel.UpdateInfo(null, null); // Hide panel
+        }
+    }
+
+    private void HandleActionHovered(string buttonId)
+    {
+        if (UnitAbilityInfoPanel == null) return;
+        if (!string.IsNullOrEmpty(_state.ActiveUnitId) && _state.AllUnits.TryGetValue(_state.ActiveUnitId, out var activeUnit))
+        {
+            var action = activeUnit.Actions[int.Parse(buttonId)];
+            UnitAbilityInfoPanel.UpdateInfo(action);
+        }
+    }
+
+    private void HandleActionUnhovered(string buttonId)
+    {
+        UpdateAbilityInfoPanel();
+    }
+
+    private void UpdateAbilityInfoPanel()
+    {
+        if (UnitAbilityInfoPanel == null) return;
+
+        if (!string.IsNullOrEmpty(_state.ActiveUnitId) && _state.AllUnits.TryGetValue(_state.ActiveUnitId, out var activeUnit))
+        {
+            if (_currentAction != null)
+            {
+                UnitAbilityInfoPanel.UpdateInfo(_currentAction);
+            }
+            else
+            {
+                UnitAbilityInfoPanel.UpdateInfo(null); // Hide panel
+            }
+        }
+        else
+        {
+            UnitAbilityInfoPanel.UpdateInfo(null); // Hide panel
         }
     }
 }
