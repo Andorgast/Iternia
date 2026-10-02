@@ -14,7 +14,7 @@ public partial class Unit : Resource
     [Export] public Array<Element> Resistances { get; set; }
     [Export] public Array<Element> Weaknesses { get; set; }
     //The values below shouldn't be used for anything, these are here for easy editing in the editor
-    [Export] protected int InitialAttack;
+    [Export] protected float InitialAttack;
     [Export] protected int InitialHp;
     [Export] protected int InitialMovement;
     [Export] protected int InitialActionPoints;

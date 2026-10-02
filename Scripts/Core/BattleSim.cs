@@ -7,6 +7,7 @@ namespace Iternia.Scripts.Core;
 public class BattleSim
 {
     private readonly TurnOrder _turnOrder;
+    private EnemyAI _enemyAi = new();
 
     public BattleSim(TurnOrder turnOrder)
     {
@@ -59,12 +60,14 @@ public class BattleSim
                 events.Add(evt);
         }
 
-        var abilityPick = EnemyAI.PickAbility(state, enemy);
+        var abilityPick = _enemyAi.PickAbility(state, enemy);
         if (abilityPick.HasValue)
         {
             MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos);
-            events.Add(new EnemyAbilityChosenEvent(enemy.Id, abilityPick.Value.Action.Id, enemyPos, abilityPick.Value.TargetPos));
+            events.Add(new EnemyAbilityChosenEvent(enemy.Id, abilityPick.Value.Action, enemyPos,
+                abilityPick.Value.TargetPos));
         }
+        else events.AddRange(EndTurn(state, enemy.Id).ToList());
 
         return events;
     }

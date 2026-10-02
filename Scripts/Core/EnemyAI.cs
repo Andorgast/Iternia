@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Iternia.Manager;
 using Iternia.Scripts.Models;
 
 namespace Iternia.Scripts.Core;
 
-public static class EnemyAI
+public class EnemyAI
 {
     private static readonly Random _rng = new();
 
@@ -33,25 +34,25 @@ public static class EnemyAI
         return candidates[_rng.Next(candidates.Count)];
     }
 
-    public static (Models.Action Action, GridPos TargetPos)? PickAbility(BattleState state, EnemyUnit enemy)
+    public (Models.Action Action, GridPos TargetPos, GridPos? SecondTargetPos)? PickAbility(BattleState state, EnemyUnit enemy)
     {
         if (!MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos))
             return null;
 
-        var usable = new List<(Models.Action Action, GridPos TargetPos)>();
+        var usable = new List<(Models.Action Action, GridPos TargetPos, GridPos? SecondTargetPos)>();
 
         foreach (var action in enemy.Actions)
         {
             if (!action.OriginSquares.HasPos(enemyPos))
                 continue;
 
-            Formation targetFormation = action.TargetSide == TargetSide.Enemy
+            Formation targetFormation = action.TargetSide != TargetSide.Ally
                 ? state.PlayerFormation
                 : state.EnemyFormation;
 
             var validTargets = action.TargetSquares
                 .GetPositions()
-                .Where(tile => targetFormation.GetUnitAt(tile) != null)
+                .Where(tile => targetFormation.GetUnitAt(tile) != null && state.AllUnits.Keys.Contains(targetFormation.GetUnitAt(tile)))
                 .ToList();
 
             GD.Print($"  [AI] ability={action.Id} originOk=true validTargets={validTargets.Count}");
@@ -59,7 +60,7 @@ public static class EnemyAI
             if (validTargets.Count > 0)
             {
                 GridPos chosenTarget = validTargets[_rng.Next(validTargets.Count)];
-                usable.Add((action, chosenTarget));
+                usable.Add((action, chosenTarget, null));
             }
         }
 
