@@ -16,6 +16,9 @@ public partial class ButtonManager : Node2D
     [Export] private int _previousXPos = 0;
 
     public event Action<string> OnButtonClicked;
+    public event Action<string> OnButtonHovered;
+    public event Action<string> OnButtonUnhovered;
+    
     public ButtonManager()
     {
         _previousXPos -= _buttonWidth;
@@ -37,11 +40,13 @@ public partial class ButtonManager : Node2D
         int i = 0;
         foreach (Action action in actions)
         {
-            Button newButton = _buttonScene.Instantiate<Button>();
+            global::Button newButton = _buttonScene.Instantiate<global::Button>();
             int newXPos = _previousXPos + _buttonWidth + _spacing;
             _previousXPos = newXPos;
             newButton.Position = new Vector2(newXPos, Position.Y);
-            newButton.ButtonClicked += (name) => OnButtonClicked(name);
+            newButton.ButtonClicked += (name) => OnButtonClicked?.Invoke(name);
+            newButton.ButtonHovered += (name) => OnButtonHovered?.Invoke(name);
+            newButton.ButtonUnhovered += (name) => OnButtonUnhovered?.Invoke(name);
             newButton.Name = i.ToString();
             AddChild(newButton);
             i++;

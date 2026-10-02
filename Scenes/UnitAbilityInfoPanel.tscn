@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://dha5vubf01bsp"]
+
+[ext_resource type="Script" uid="uid://de23qiva88gug" path="res://Scripts/View/UnitAbilityInfoPanel.cs" id="1_hmdjf"]
+
+[node name="UnitAbilityInfoPanel" type="PanelContainer" unique_id=317580938 node_paths=PackedStringArray("_abilityName", "InitialOriginSquares", "InitialTargetSquares", "InitialAoiSquares", "TargetType", "AllyTargetRange", "TileEffects", "ActionElement", "TargetSide", "StatToChange", "StatChangeAmount", "SecondaryStatToChange", "SecondaryStatChangeAmount", "Damage", "SecondaryDamage")]
+custom_minimum_size = Vector2(200, 100)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1152.0
+offset_top = -648.0
+offset_right = -952.0
+offset_bottom = -227.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("1_hmdjf")
+_abilityName = NodePath("MarginContainer/VBoxContainer/Name")
+InitialOriginSquares = NodePath("MarginContainer/VBoxContainer/OriginSquares")
+InitialTargetSquares = NodePath("MarginContainer/VBoxContainer/TargetSquares")
+InitialAoiSquares = NodePath("MarginContainer/VBoxContainer/AoiSquares")
+TargetType = NodePath("MarginContainer/VBoxContainer/TargetType")
+AllyTargetRange = NodePath("MarginContainer/VBoxContainer/AllyTargetRange")
+TileEffects = NodePath("MarginContainer/VBoxContainer/TileEffects")
+ActionElement = NodePath("MarginContainer/VBoxContainer/ActionElement")
+TargetSide = NodePath("MarginContainer/VBoxContainer/TargetSide")
+StatToChange = NodePath("MarginContainer/VBoxContainer/StatToChange")
+StatChangeAmount = NodePath("MarginContainer/VBoxContainer/StatChangeAmount")
+SecondaryStatToChange = NodePath("MarginContainer/VBoxContainer/SecondaryStatToChange")
+SecondaryStatChangeAmount = NodePath("MarginContainer/VBoxContainer/SecondaryStatChangeAmount")
+Damage = NodePath("MarginContainer/VBoxContainer/Damage")
+SecondaryDamage = NodePath("MarginContainer/VBoxContainer/SecondaryDamage")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1591707596]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1040625727]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1161268601]
+layout_mode = 2
+text = "Name: "
+
+[node name="OriginSquares" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1725880684]
+layout_mode = 2
+text = "HP: "
+
+[node name="TargetSquares" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1330804559]
+layout_mode = 2
+text = "AP: "
+
+[node name="AoiSquares" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1484912607]
+layout_mode = 2
+text = "MP: "
+
+[node name="TargetType" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1848759879]
+layout_mode = 2
+text = "MP: "
+
+[node name="AllyTargetRange" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1355729299]
+layout_mode = 2
+text = "MP: "
+
+[node name="TileEffects" type="Label" parent="MarginContainer/VBoxContainer" unique_id=813326613]
+layout_mode = 2
+text = "MP: "
+
+[node name="ActionElement" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1624479782]
+layout_mode = 2
+text = "MP: "
+
+[node name="TargetSide" type="Label" parent="MarginContainer/VBoxContainer" unique_id=304138267]
+layout_mode = 2
+text = "MP: "
+
+[node name="StatToChange" type="Label" parent="MarginContainer/VBoxContainer" unique_id=656919661]
+layout_mode = 2
+text = "MP: "
+
+[node name="StatChangeAmount" type="Label" parent="MarginContainer/VBoxContainer" unique_id=255782955]
+layout_mode = 2
+text = "MP: "
+
+[node name="SecondaryStatToChange" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2037638155]
+layout_mode = 2
+text = "MP: "
+
+[node name="SecondaryStatChangeAmount" type="Label" parent="MarginContainer/VBoxContainer" unique_id=216974102]
+layout_mode = 2
+text = "MP: "
+
+[node name="Damage" type="Label" parent="MarginContainer/VBoxContainer" unique_id=761492244]
+layout_mode = 2
+text = "MP: "
+
+[node name="SecondaryDamage" type="Label" parent="MarginContainer/VBoxContainer" unique_id=716197911]
+layout_mode = 2
+text = "MP: "
