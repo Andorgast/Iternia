@@ -59,11 +59,11 @@ public class BattleSim
                 events.Add(evt);
         }
 
-        var chosenAction = EnemyAI.PickAbility(state, enemy);
-        if (chosenAction != null)
+        var abilityPick = EnemyAI.PickAbility(state, enemy);
+        if (abilityPick.HasValue)
         {
             MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos);
-            events.Add(new EnemyAbilityChosenEvent(enemy.Id, chosenAction.Id, enemyPos));
+            events.Add(new EnemyAbilityChosenEvent(enemy.Id, abilityPick.Value.Action.Id, enemyPos, abilityPick.Value.TargetPos));
         }
 
         return events;
@@ -81,24 +81,12 @@ public class BattleSim
                 state.TurnQueue.Enqueue(id);
             }
         }
-
-        if (state.TurnQueue.Count > 0)
-        {
-            string nextUnitId = state.TurnQueue.Dequeue(); 
-            state.ActiveUnitId = nextUnitId;
-
-            if (state.AllUnits.TryGetValue(nextUnitId, out var activeUnit))
-            {
-                state.CurrentTurnBudget.Reset(activeUnit);
-            }
-
-            events.Add(new TurnStartedEvent(nextUnitId));
-            var remaining = new List<string>(state.TurnQueue);
-            events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, nextUnitId, remaining));
-        }
-        else
-        {
-            state.ActiveUnitId = null;
-        }
+        
+        
+        state.ActiveUnitId = state.TurnQueue.Dequeue();
+        state.CurrentTurnBudget.Reset(state.AllUnits[state.ActiveUnitId ]);
+        events.Add(new TurnStartedEvent(state.ActiveUnitId ));
+        var remaining = new List<string>(state.TurnQueue);
+        events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, state.ActiveUnitId , remaining));
     }
 }

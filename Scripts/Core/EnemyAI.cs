@@ -33,12 +33,12 @@ public static class EnemyAI
         return candidates[_rng.Next(candidates.Count)];
     }
 
-    public static Models.Action PickAbility(BattleState state, EnemyUnit enemy)
+    public static (Models.Action Action, GridPos TargetPos)? PickAbility(BattleState state, EnemyUnit enemy)
     {
         if (!MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos))
             return null;
 
-        var usable = new List<Models.Action>();
+        var usable = new List<(Models.Action Action, GridPos TargetPos)>();
 
         foreach (var action in enemy.Actions)
         {
@@ -49,12 +49,18 @@ public static class EnemyAI
                 ? state.PlayerFormation
                 : state.EnemyFormation;
 
-            bool hasTarget = action.TargetSquares
+            var validTargets = action.TargetSquares
                 .GetPositions()
-                .Any(tile => targetFormation.GetUnitAt(tile) != null);
+                .Where(tile => targetFormation.GetUnitAt(tile) != null)
+                .ToList();
 
-            if (hasTarget)
-                usable.Add(action);
+            GD.Print($"  [AI] ability={action.Id} originOk=true validTargets={validTargets.Count}");
+
+            if (validTargets.Count > 0)
+            {
+                GridPos chosenTarget = validTargets[_rng.Next(validTargets.Count)];
+                usable.Add((action, chosenTarget));
+            }
         }
 
         if (usable.Count == 0)
