@@ -82,7 +82,7 @@ public class BattleSim
             }
         }
         
-        state.ActiveUnitId = nextUnitId;
+        state.ActiveUnitId = state.TurnQueue.Dequeue();
         state.CurrentTurnBudget.Reset(state.AllUnits[nextUnitId]);
         events.Add(new TurnStartedEvent(nextUnitId));
         var remaining = new List<string>(state.TurnQueue);
