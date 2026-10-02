@@ -82,10 +82,11 @@ public class BattleSim
             }
         }
         
+        
         state.ActiveUnitId = state.TurnQueue.Dequeue();
-        state.CurrentTurnBudget.Reset(state.AllUnits[nextUnitId]);
-        events.Add(new TurnStartedEvent(nextUnitId));
+        state.CurrentTurnBudget.Reset(state.AllUnits[state.ActiveUnitId ]);
+        events.Add(new TurnStartedEvent(state.ActiveUnitId ));
         var remaining = new List<string>(state.TurnQueue);
-        events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, nextUnitId, remaining));
+        events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, state.ActiveUnitId , remaining));
     }
 }
