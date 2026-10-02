@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://aggro_aster_001"]
+
+[ext_resource type="Resource" uid="uid://ctoxox2gs8f8v" path="res://Resources/Abilities/Tile effects/Aggro.tres" id="1_aggroeff"]
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="2_aggro"]
+
+[resource]
+script = ExtResource("2_aggro")
+Id = "Aggro"
+Name = "Aggro"
+InitialOriginSquares = Basis(1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1)
+InitialTargetSquares = Basis(1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1)
+InitialAoiSquares = Basis(0, 1.1, 0, 0, 1.1, 0, 0, 1.1, 0)
+TileEffects = Array[Resource]([ExtResource("1_aggroeff")])
+ActionElement = 4
+TargetSide = 0
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

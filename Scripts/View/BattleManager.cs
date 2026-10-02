@@ -18,8 +18,10 @@ public partial class BattleManager : Node
     [Export] public PackedScene UnitViewScene { get; set; }
     [Export] public Unit Player1Resource { get; set; }
     [Export] public Unit Player2Resource { get; set; }
+    [Export] public Unit Player3Resource { get; set; }
     [Export] public EnemyUnit Enemy1Resource { get; set; }
     [Export] public EnemyUnit Enemy2Resource { get; set; }
+    [Export] public EnemyUnit Enemy3Resource { get; set; }
     [Export] public TurnOrderHUD TurnOrderHUD{ get; set; }
     [Export] public UnitInfoPanel UnitInfoPanel { get; set; }
     [Export] public ButtonManager ButtonManager;
@@ -43,10 +45,12 @@ public partial class BattleManager : Node
         if (EnemyGrid != null) EnemyGrid.OnTileClicked += HandleTileClicked;
         if (ButtonManager != null) ButtonManager.OnButtonClicked += HandleActionPressed;
 
-        SpawnUnitFromResource(Player1Resource, TargetSide.Ally, new GridPos(1, 1));
+        SpawnUnitFromResource(Player1Resource, TargetSide.Ally, new GridPos(1, 0));
         SpawnUnitFromResource(Player2Resource, TargetSide.Ally, new GridPos(2, 1));
+        SpawnUnitFromResource(Player3Resource, TargetSide.Ally, new GridPos(2, 2));
         SpawnUnitFromResource(Enemy1Resource, TargetSide.Enemy, new GridPos(0, 1));
         SpawnUnitFromResource(Enemy2Resource, TargetSide.Enemy, new GridPos(2, 2));
+        SpawnUnitFromResource(Enemy3Resource, TargetSide.Enemy, new GridPos(0, 2));
 
         TurnOrderHUD?.Setup(_state.AllUnits);
 

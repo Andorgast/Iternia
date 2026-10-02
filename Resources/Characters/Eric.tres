@@ -1,12 +1,15 @@
 [gd_resource type="Resource" script_class="Unit" format=3 uid="uid://cd3e2arr1fe07"]
 
 [ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_0xj7y"]
+[ext_resource type="Resource" path="res://Resources/Abilities/RapidStrike.tres" id="2_rapids"]
+[ext_resource type="Resource" path="res://Resources/Abilities/BlitzRush.tres" id="3_blitz"]
+[ext_resource type="Resource" path="res://Resources/Abilities/ChainStrike.tres" id="4_chains"]
 
 [resource]
 script = ExtResource("1_0xj7y")
 Id = "Eric"
 Name = "Eric"
-Actions = Array[Object]([])
+Actions = Array[Object]([ExtResource("2_rapids"), ExtResource("3_blitz"), ExtResource("4_chains")])
 Resistances = null
 Weaknesses = null
 InitialAttack = 2

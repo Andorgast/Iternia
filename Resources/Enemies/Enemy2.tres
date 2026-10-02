@@ -3,6 +3,7 @@
 [ext_resource type="Resource" uid="uid://cyfsdm11ne6dd" path="res://Resources/Abilities/Rapier.tres" id="1_248lj"]
 [ext_resource type="Script" uid="uid://dsx1jndbgngag" path="res://Scripts/Models/EnemyUnit.cs" id="1_tljsg"]
 [ext_resource type="Resource" uid="uid://ctykd3xytsr1a" path="res://Resources/Abilities/BloodToss.tres" id="2_bbyyr"]
+[ext_resource type="Resource" uid="uid://boske7fp3qcuj" path="res://Resources/Abilities/Heal.tres" id="3_3kd1j"]
 
 [resource]
 script = ExtResource("1_tljsg")
@@ -10,7 +11,7 @@ InitialAllowedTiles = Basis(0, 1, 1, 1, 1, 1, 0, 1, 1)
 Id = "Enemy2"
 Name = "Enemy2"
 Side = 1
-Actions = Array[Object]([ExtResource("1_248lj"), ExtResource("2_bbyyr")])
+Actions = Array[Object]([ExtResource("1_248lj"), ExtResource("2_bbyyr"), ExtResource("3_3kd1j")])
 Resistances = null
 Weaknesses = null
 InitialAttack = 10

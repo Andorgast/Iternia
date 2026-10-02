@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_2whj2")
+Id = "Darkness"
 Name = "Darkness"
 InitialOriginSquares = Basis(0, 1.1, 1.1, 0, 0, 0, 0, 1.1, 1.1)
 InitialTargetSquares = Basis(1.1, 0, 0, 1.1, 1.1, 0, 1.1, 0, 0)

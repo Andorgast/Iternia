@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyUnit" format=3 uid="uid://bflrjlrvnbj1x"]
+
+[ext_resource type="Resource" uid="uid://cyfsdm11ne6dd" path="res://Resources/Abilities/Rapier.tres" id="1_obftu"]
+[ext_resource type="Resource" uid="uid://ctykd3xytsr1a" path="res://Resources/Abilities/BloodToss.tres" id="2_bpgam"]
+[ext_resource type="Resource" uid="uid://boske7fp3qcuj" path="res://Resources/Abilities/Heal.tres" id="3_rvprv"]
+[ext_resource type="Script" uid="uid://dsx1jndbgngag" path="res://Scripts/Models/EnemyUnit.cs" id="4_jty1r"]
+
+[resource]
+script = ExtResource("4_jty1r")
+InitialAllowedTiles = Basis(0, 1, 1, 1, 1, 1, 0, 1, 1)
+Id = "Enemy2"
+Name = "Enemy2"
+Side = 1
+Actions = Array[Object]([ExtResource("1_obftu"), ExtResource("2_bpgam"), ExtResource("3_rvprv")])
+Resistances = null
+Weaknesses = null
+InitialAttack = 10
+InitialHp = 10
+InitialActionPoints = 1
+InitialSpeed = 8
+metadata/_custom_type_script = "uid://dsx1jndbgngag"
