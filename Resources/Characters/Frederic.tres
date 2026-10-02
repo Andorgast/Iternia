@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://baxeffxwsupoe"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_bv1lb"]
+[ext_resource type="Resource" uid="uid://boske7fp3qcuj" path="res://Resources/Abilities/Heal.tres" id="1_k6yut"]
+[ext_resource type="Resource" path="res://Resources/Abilities/Aggro.tres" id="2_n0jio"]
+[ext_resource type="Resource" uid="uid://cyfsdm11ne6dd" path="res://Resources/Abilities/Rapier.tres" id="3_i3end"]
+
+[resource]
+script = ExtResource("1_bv1lb")
+Id = "Frederic"
+Name = "Frederic"
+Actions = Array[Object]([ExtResource("1_k6yut"), ExtResource("2_n0jio"), ExtResource("3_i3end")])
+Resistances = Array[int]([4, 5])
+Weaknesses = null
+InitialAttack = 1.7
+InitialHp = 30
+InitialMovement = 2
+InitialActionPoints = 1
+InitialSpeed = 5
+InitialAggro = 2.0
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"

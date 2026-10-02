@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://ber3ggqiw3qpc"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_chains"]
+
+[resource]
+script = ExtResource("1_chains")
+Id = "ChainStrike"
+Name = "Chain Strike"
+InitialOriginSquares = Basis(0, 1.1, 1.1, 0, 1.1, 1.1, 0, 1.1, 1.1)
+InitialTargetSquares = Basis(1, 0, 1, 0, 1.1, 0, 1, 0, 1)
+InitialAoiSquares = Basis(1.1, 1, 1, 1, 1.1, 1, 1.1, 1, 1)
+TargetType = 1
+TileEffects = null
+ActionElement = 4
+TargetSide = 1
+Damage = 5
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

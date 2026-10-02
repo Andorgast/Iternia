@@ -1,0 +1,95 @@
+using System.Collections.Generic;
+using System.Linq;
+using Godot;
+
+namespace Iternia.Scripts.Core;
+
+public class BattleSim
+{
+    private readonly TurnOrder _turnOrder;
+    private EnemyAI _enemyAi = new();
+
+    public BattleSim(TurnOrder turnOrder)
+    {
+        _turnOrder = turnOrder;
+    }
+
+    public IReadOnlyList<BattleEvent> StartBattle(BattleState state)
+    {
+        var events = new List<BattleEvent>();
+        AdvanceTurn(state, events);
+        return events;
+    }
+
+    public IReadOnlyList<BattleEvent> TryMove(BattleState state, string unitId, GridPos targetPos)
+    {
+        var events = new List<BattleEvent>();
+
+        if (!MovementRules.CanMove(state, unitId, targetPos))
+        {
+            events.Add(new CommandFailedEvent("Invalid move: destination occupied, out of bounds, or out of moves."));
+            return events;
+        }
+
+        MovementRules.TryFindUnitPosition(state, unitId, out Formation formation, out GridPos currentPos);
+        formation.MoveUnit(currentPos, targetPos);
+        state.CurrentTurnBudget.SpendMove();
+
+        events.Add(new UnitMovedEvent(unitId, currentPos, targetPos));
+        
+        return events;
+    }
+
+    public IReadOnlyList<BattleEvent> EndTurn(BattleState state, string unitId)
+    {
+        var events = new List<BattleEvent>();
+        events.Add(new TurnEndedEvent(unitId));
+        AdvanceTurn(state, events);
+        return events;
+    }
+
+    public IReadOnlyList<BattleEvent> ExecuteEnemyTurn(BattleState state, Models.EnemyUnit enemy)
+    {
+        var events = new List<BattleEvent>();
+
+        var target = EnemyAI.PickMoveTarget(state, enemy);
+        if (target.HasValue)
+        {
+            var moveEvents = TryMove(state, enemy.Id, target.Value);
+            foreach (var evt in moveEvents)
+                events.Add(evt);
+        }
+
+        var abilityPick = _enemyAi.PickAbility(state, enemy);
+        if (abilityPick.HasValue)
+        {
+            MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos);
+            events.Add(new EnemyAbilityChosenEvent(enemy.Id, abilityPick.Value.Action, enemyPos,
+                abilityPick.Value.TargetPos));
+        }
+        else events.AddRange(EndTurn(state, enemy.Id).ToList());
+
+        return events;
+    }
+
+
+    private void AdvanceTurn(BattleState state, List<BattleEvent> events)
+    {
+        if (state.TurnQueue.Count == 0)
+        {
+            var newOrder = _turnOrder.CalculateRoundOrder(state);
+            state.CurrentRoundOrder = newOrder;
+            foreach (var id in newOrder)
+            {
+                state.TurnQueue.Enqueue(id);
+            }
+        }
+        
+        
+        state.ActiveUnitId = state.TurnQueue.Dequeue();
+        state.CurrentTurnBudget.Reset(state.AllUnits[state.ActiveUnitId ]);
+        events.Add(new TurnStartedEvent(state.ActiveUnitId ));
+        var remaining = new List<string>(state.TurnQueue);
+        events.Add(new TurnOrderChangedEvent(state.CurrentRoundOrder, state.ActiveUnitId , remaining));
+    }
+}

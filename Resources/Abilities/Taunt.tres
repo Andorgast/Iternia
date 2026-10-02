@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://iwl4fw1bdu74"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_88lpo"]
+[ext_resource type="Resource" uid="uid://ctoxox2gs8f8v" path="res://Resources/Abilities/Tile effects/Aggro.tres" id="1_175qd"]
+
+[resource]
+script = ExtResource("1_88lpo")
+Id = "Taunt"
+Name = "Taunt"
+InitialOriginSquares = Basis(0, 0, 1, 0, 1, 1, 0, 0, 1)
+InitialTargetSquares = Basis(1, 1, 1, 1, 1, 1, 1, 1, 1)
+AllyTargetRange = 3
+TileEffects = Array[Object]([ExtResource("1_175qd")])
+ActionElement = 4
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"

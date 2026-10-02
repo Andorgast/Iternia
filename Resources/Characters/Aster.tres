@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://dabyavin10wi3"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_ja6q3"]
+[ext_resource type="Resource" path="res://Resources/Abilities/Aggro.tres" id="2_aggroab"]
+[ext_resource type="Resource" uid="uid://dgmnk4s2be8al" path="res://Resources/Abilities/SummonBirdTotem.tres" id="2_gtw7n"]
+[ext_resource type="Resource" uid="uid://cyfsdm11ne6dd" path="res://Resources/Abilities/Rapier.tres" id="3_x6q3c"]
+
+[resource]
+script = ExtResource("1_ja6q3")
+Id = "Aster"
+Name = "Aster"
+Actions = Array[Object]([ExtResource("2_aggroab"), ExtResource("2_gtw7n"), ExtResource("3_x6q3c")])
+Resistances = Array[int]([0])
+Weaknesses = null
+InitialAttack = 0.8
+InitialHp = 25
+InitialMovement = 1
+InitialActionPoints = 1
+InitialSpeed = 15
+InitialAggro = 1.5
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"

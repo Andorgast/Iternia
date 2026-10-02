@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://divwvjwt5vn75"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_0mvul"]
+[ext_resource type="Resource" uid="uid://dgmnk4s2be8al" path="res://Resources/Abilities/SummonBirdTotem.tres" id="2_birdtot"]
+[ext_resource type="Resource" uid="uid://boske7fp3qcuj" path="res://Resources/Abilities/Heal.tres" id="3_8tw6s"]
+[ext_resource type="Resource" uid="uid://cotglxlhthlnq" path="res://Resources/Abilities/FireTotem.tres" id="3_firetot"]
+
+[resource]
+script = ExtResource("1_0mvul")
+Id = "Elaena"
+Name = "Elaena"
+Actions = Array[Object]([ExtResource("2_birdtot"), ExtResource("3_firetot"), ExtResource("3_8tw6s")])
+Resistances = Array[int]([0, 3, 2])
+Weaknesses = Array[int]([5])
+InitialAttack = 0.5
+InitialHp = 18
+InitialMovement = 1
+InitialActionPoints = 1
+InitialSpeed = 13
+InitialAggro = 0.8
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"

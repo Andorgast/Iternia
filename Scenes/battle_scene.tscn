@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://b52rwejxpnabl"]
+
+[ext_resource type="Script" uid="uid://bu8ujiyja18y3" path="res://Scripts/View/BattleManager.cs" id="1_e5vbs"]
+[ext_resource type="PackedScene" uid="uid://caloj1bhbytom" path="res://Scenes/unit_view.tscn" id="2_3gnqe"]
+[ext_resource type="Script" uid="uid://dnmlre5q5vd8k" path="res://Scripts/View/GridView.cs" id="3_gt16y"]
+[ext_resource type="Resource" uid="uid://dabyavin10wi3" path="res://Resources/Characters/Aster.tres" id="3_xdap8"]
+[ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="4_20f6w"]
+[ext_resource type="Resource" uid="uid://cd3e2arr1fe07" path="res://Resources/Characters/Eric.tres" id="4_f856b"]
+[ext_resource type="Resource" uid="uid://divwvjwt5vn75" path="res://Resources/Characters/Elaena.tres" id="5_778cw"]
+[ext_resource type="Resource" uid="uid://bhnm1nmvwmwe4" path="res://Resources/Enemies/Enemy1.tres" id="5_w4764"]
+[ext_resource type="Resource" uid="uid://103g1ym6pnxb" path="res://Resources/Enemies/Enemy2.tres" id="6_ed262"]
+[ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="7_w4764"]
+[ext_resource type="Resource" uid="uid://bflrjlrvnbj1x" path="res://Resources/Enemies/Enemy3.tres" id="8_vuvll"]
+[ext_resource type="Script" uid="uid://dce6g7e6jeqkk" path="res://Scripts/View/ButtonManager.cs" id="8_w4764"]
+[ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="9_ed262"]
+[ext_resource type="PackedScene" uid="uid://ddy2qxxxxxxx" path="res://Scenes/UnitInfoPanel.tscn" id="10_info"]
+[ext_resource type="PackedScene" uid="uid://dha5vubf01bsp" path="res://Scenes/UnitAbilityInfoPanel.tscn" id="15_f856b"]
+
+[node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD", "UnitInfoPanel", "UnitAbilityInfoPanel", "ButtonManager")]
+script = ExtResource("1_e5vbs")
+PlayerGrid = NodePath("PlayerGrid")
+EnemyGrid = NodePath("EnemyGrid")
+UnitViewScene = ExtResource("2_3gnqe")
+Player1Resource = ExtResource("3_xdap8")
+Player2Resource = ExtResource("4_f856b")
+Player3Resource = ExtResource("5_778cw")
+Enemy1Resource = ExtResource("5_w4764")
+Enemy2Resource = ExtResource("6_ed262")
+Enemy3Resource = ExtResource("8_vuvll")
+TurnOrderHUD = NodePath("TurnOrderHUD")
+UnitInfoPanel = NodePath("UILayer/UnitInfoPanel")
+UnitAbilityInfoPanel = NodePath("UILayer/UnitAbilityInfoPanel")
+ButtonManager = NodePath("ButtonManager")
+
+[node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
+position = Vector2(151, 290)
+script = ExtResource("3_gt16y")
+TileScene = ExtResource("4_20f6w")
+
+[node name="EnemyGrid" type="Node2D" parent="." unique_id=664863384]
+position = Vector2(727, 273)
+script = ExtResource("3_gt16y")
+Side = 1
+TileScene = ExtResource("4_20f6w")
+
+[node name="ButtonManager" type="Node2D" parent="." unique_id=370170379]
+position = Vector2(0, 250)
+script = ExtResource("8_w4764")
+_buttonScene = ExtResource("9_ed262")
+_buttonWidth = 128
+_spacing = 100
+
+[node name="TurnOrderHUD" parent="." unique_id=1648753853 instance=ExtResource("7_w4764")]
+offset_left = 533.0
+offset_top = 34.0
+offset_right = 533.0
+offset_bottom = 94.0
+layout_direction = 2
+alignment = 1
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=336115956]
+
+[node name="UnitInfoPanel" parent="UILayer" unique_id=1894613967 instance=ExtResource("10_info")]
+
+[node name="UnitAbilityInfoPanel" parent="UILayer" unique_id=317580938 instance=ExtResource("15_f856b")]
+offset_left = -200.0
+offset_top = -421.0
+offset_right = 0.0
+offset_bottom = 0.0

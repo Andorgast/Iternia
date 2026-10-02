@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Unit" format=3 uid="uid://cd3e2arr1fe07"]
+
+[ext_resource type="Script" uid="uid://jxdcd3hq32hb" path="res://Scripts/Models/Unit.cs" id="1_0xj7y"]
+[ext_resource type="Resource" uid="uid://cl4cmu7p46kj3" path="res://Resources/Abilities/RapidStrike.tres" id="2_rapids"]
+[ext_resource type="Resource" path="res://Resources/Abilities/BlitzRush.tres" id="3_blitz"]
+[ext_resource type="Resource" uid="uid://ber3ggqiw3qpc" path="res://Resources/Abilities/ChainStrike.tres" id="4_chains"]
+
+[resource]
+script = ExtResource("1_0xj7y")
+Id = "Eric"
+Name = "Eric"
+Actions = Array[Object]([ExtResource("2_rapids"), ExtResource("3_blitz"), ExtResource("4_chains")])
+Resistances = null
+Weaknesses = null
+InitialAttack = 1.3
+InitialHp = 10
+InitialMovement = 2
+InitialActionPoints = 1
+InitialSpeed = 20
+InitialAggro = 1.0
+metadata/_custom_type_script = "uid://jxdcd3hq32hb"

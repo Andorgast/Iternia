@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Action" format=3 uid="uid://boske7fp3qcuj"]
+
+[ext_resource type="Script" uid="uid://cl6mib0yubm5u" path="res://Scripts/Models/Action.cs" id="1_6cul6"]
+
+[resource]
+script = ExtResource("1_6cul6")
+Id = "Heal"
+Name = "Heal"
+InitialOriginSquares = Basis(0, 1.1, 0, 0, 1.1, 1.1, 0, 1.1, 0)
+InitialTargetSquares = Basis(1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1)
+InitialAoiSquares = Basis(0, 0, 0, 0, 1.1, 0, 0, 0, 0)
+TargetType = 1
+AllyTargetRange = 0
+TileEffects = null
+ActionElement = 1
+StatToChange = 2
+StatChangeAmount = 4.0
+metadata/_custom_type_script = "uid://cl6mib0yubm5u"
