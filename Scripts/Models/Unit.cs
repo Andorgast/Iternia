@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 using Iternia.Scripts.Core;
@@ -7,7 +8,7 @@ namespace Iternia.Scripts.Models;
 [GlobalClass]
 public partial class Unit : Resource
 {
-    [Export] public string Id { get; protected set; }
+    [Export] private PackedScene _unitScene;
     [Export] public string Name { get; protected set; }
     [Export] public TargetSide Side { get; set; }
     [Export] public Array<Action> Actions { get; protected set; }
@@ -23,19 +24,14 @@ public partial class Unit : Resource
     
     //The actual attributes that the game should use
     public float Attack;
-    public float DefaultAttack;
     public int Hp;
     public int MaxHp;
     public float Speed;
-    public float DefaultSpeed;
     public int MaxMovement;
     public int Movement;
-    public int DefaultMovement;
     public int MaxActionPoints;
     public int ActionPoints;
-    public int DefaultActionPoints;
     public float Aggro;
-    public float DefaultAggro;
     public int TakeDamage(int damageToTake, Element attackType)
     {
         if (damageToTake == 0) ;
@@ -48,19 +44,27 @@ public partial class Unit : Resource
     public void Init()
     {
         Attack = InitialAttack;
-        DefaultAttack = InitialAttack;
         Hp = InitialHp;
         MaxHp = InitialHp;
         Speed = InitialSpeed;
-        DefaultSpeed = InitialSpeed;
         MaxMovement = InitialMovement;
         Movement = InitialMovement; 
-        DefaultMovement = InitialMovement;
         MaxActionPoints = InitialActionPoints;
         ActionPoints = InitialActionPoints;
-        DefaultActionPoints = InitialActionPoints;
         Aggro = InitialAggro;
-        DefaultAggro = InitialAggro;
+    }
+
+    public bool ExecuteAction(Action action)
+    {
+        if (ActionPoints-- > 0) return true;
+        return false;
+        // Actions[actionIndex].PlayAnimation();
+    }
+
+    public void StartTurn()
+    {
+        ActionPoints = MaxActionPoints;
+        Movement = MaxMovement;
     }
 }
 
