@@ -33,7 +33,7 @@ public class EnemyAI
         return candidates[_rng.Next(candidates.Count)];
     }
 
-    public (Models.Action Action, GridPos TargetPos, GridPos? SecondTargetPos)? PickAbility(BattleState state, EnemyUnit enemy)
+    public static (Models.Action Action, GridPos TargetPos, GridPos? SecondTargetPos)? PickAbility(BattleState state, EnemyUnit enemy)
     {
         if (!MovementRules.TryFindUnitPosition(state, enemy.Name, out Formation formation, out GridPos enemyPos))
             return null;
