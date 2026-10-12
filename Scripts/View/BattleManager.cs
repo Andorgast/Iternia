@@ -439,6 +439,8 @@ public partial class BattleManager : Node
         ButtonManager.RemoveButtons();
         UnitInfoPanel?.UpdateInfo(null);
         GD.Print($"Turn ended for: {_state.ActiveUnit.Name}");
+        UnitAbilityInfoPanel?.UpdateInfo(null);
+        _currentAction = null;
         if(startTurnAutomatically) StartTurn();
     }
 
