@@ -11,7 +11,7 @@ public partial class UnitInfoPanel : PanelContainer
     [Export] private Label _apLabel;
     [Export] private Label _mpLabel;
 
-    public void UpdateInfo(Unit unit, TurnBudget budget)
+    public void UpdateInfo(Unit unit)
     {
         if (unit == null)
         {
@@ -20,13 +20,9 @@ public partial class UnitInfoPanel : PanelContainer
         }
 
         Visible = true;
-        _nameLabel.Text = $"Name: {unit.Name} ({unit.Id})";
+        _nameLabel.Text = $"Name: {unit.Name} ({unit.Name})";
         _hpLabel.Text = $"HP: {unit.Hp} / {unit.MaxHp}";
-        
-        if (budget != null)
-        {
-            _apLabel.Text = $"AP: {budget.ActionPoints} / {unit.MaxActionPoints}";
-            _mpLabel.Text = $"MP: {budget.MoveSteps} / {unit.MaxMovement}";
-        }
+        _apLabel.Text = $"AP: {unit.ActionPoints} / {unit.MaxActionPoints}";
+        _mpLabel.Text = $"MP: {unit.Movement} / {unit.MaxMovement}";
     }
 }

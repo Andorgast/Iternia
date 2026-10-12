@@ -11,9 +11,11 @@ public partial class GridView : Node2D
     [Export] public TargetSide Side { get; set; } = TargetSide.Ally;
     [Export] public int TileSize { get; set; } = 64;
     [Export] public int Spacing { get; set; } = 4;
+    [Export] public int Rows { get; set; } = 3;
+    [Export] public int Collums { get; set; } = 3;
     [Export] public PackedScene TileScene { get; set; }
 
-    private readonly Dictionary<GridPos, BattleTile> _tiles = new();
+    private Dictionary<GridPos, BattleTile> _tiles = new();
     
     public event System.Action<TargetSide, GridPos> OnTileClicked;
 
@@ -39,10 +41,7 @@ public partial class GridView : Node2D
     {
         foreach (var pos in positions)
         {
-            if (_tiles.TryGetValue(pos, out var tile))
-            {
-                tile.UpdateVisuals(false, reason, true);
-            }
+            _tiles[pos].UpdateVisuals(false, reason, true);
         }
     }
 
@@ -69,9 +68,9 @@ public partial class GridView : Node2D
             return;
         }
 
-        for (int collum = 0; collum < 3; collum++)
+        for (int collum = 0; collum < Collums; collum++)
         {
-            for (int row = 0; row < 3; row++)
+            for (int row = 0; row < Rows; row++)
             {
                 GridPos pos = new GridPos(row, collum);
                 Vector2 screenPos = GridToScreen(pos);

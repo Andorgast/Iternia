@@ -63,6 +63,7 @@ alignment = 1
 [node name="UnitInfoPanel" parent="UILayer" unique_id=1894613967 instance=ExtResource("10_info")]
 
 [node name="UnitAbilityInfoPanel" parent="UILayer" unique_id=317580938 instance=ExtResource("15_f856b")]
+visible = false
 offset_left = -200.0
 offset_top = -421.0
 offset_right = 0.0
