@@ -3,8 +3,7 @@ namespace Iternia.Scripts.Core;
 public enum TargetSide
 {
     Ally,
-    Enemy,
-    Both
+    Enemy
 }
 
 public enum Element
@@ -40,10 +39,9 @@ public enum TargetType
 
 public enum AllyTargetRange
 {
-    Full,
+    Default,
     Self,
     NextToSelf,
-    DefinedByTargetGrid,
     DoesntTargetAlly
 }
 

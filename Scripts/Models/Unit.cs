@@ -66,5 +66,11 @@ public partial class Unit : Resource
         ActionPoints = MaxActionPoints;
         Movement = MaxMovement;
     }
+
+    public void Move(GridPos from, GridPos to)
+    {
+        if (Movement - 1 < 0) ActionPoints--;
+        else Movement--;
+    }
 }
 

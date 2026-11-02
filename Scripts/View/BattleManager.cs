@@ -129,7 +129,6 @@ public partial class BattleManager : Node
         TargetSide globalActionTargetSide;
         if (
             (originSide == TargetSide.Ally && _currentAction.TargetSide == TargetSide.Enemy) || 
-            (originSide == TargetSide.Ally && _currentAction.TargetSide == TargetSide.Both) ||
             (originSide == TargetSide.Enemy && _currentAction.TargetSide == TargetSide.Ally)
         ) globalActionTargetSide = TargetSide.Enemy;
         else globalActionTargetSide = TargetSide.Ally;
@@ -137,114 +136,111 @@ public partial class BattleManager : Node
         if (_currentAction.OriginSquares.Positions.Contains(pos) &&
             (
                 (_currentAction.TargetSquares.Positions.Contains(clickedPos)) || 
-                (_currentAction.AllyTargetRange == AllyTargetRange.Full) ||
-                (_currentAction.AllyTargetRange == AllyTargetRange.Self && clickedPos == pos) ||
                 (_currentAction.AllyTargetRange == AllyTargetRange.NextToSelf && TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).Positions.Contains(clickedPos))
             )
            )
         {
-            if (_currentAction.TargetType == TargetType.Tile && _state.ActiveUnit.ExecuteAction(_currentAction))
+            foreach (GridPos tilePosition in TileMask.SquaresToHit(_currentAction.AoiSquares, clickedPos).Positions)
             {
-                foreach (GridPos tilePosition in TileMask.SquaresToHit(_currentAction.AoiSquares, clickedPos).Positions)
+                foreach (TileEffect tileEffect in _currentAction.TileEffects)
                 {
-                    foreach (TileEffect tileEffect in _currentAction.TileEffects)
+                    switch (globalActionTargetSide)
                     {
-                        switch (globalActionTargetSide)
-                        {
-                            case TargetSide.Ally:
-                                PlayerGrid.AddTileEffect(tilePosition, tileEffect);
-                                break;
-                            case TargetSide.Enemy:
-                                EnemyGrid.AddTileEffect(tilePosition, tileEffect);
-                                break;
-                        }
-                    }
-                }
-                GD.Print("executed an tile action");
-                UpdateBattleVisuals();
-                return true;
-            }
-            string targetId = null;
-            if (globalActionTargetSide == TargetSide.Ally || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget != null)) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
-            else if (globalActionTargetSide == TargetSide.Enemy || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget == null)) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
-            if(targetId != null && TryIsUnitAlive(targetId))
-            {
-                Unit target = _state.AllUnits[targetId];
-                if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange != AllyTargetRange.Self && _enemyToTarget != null)
-                {
-                    string allyTilesToHighlight = null;
-                    switch (_currentAction.AllyTargetRange)
-                    {
-                        case AllyTargetRange.Full:
-                            allyTilesToHighlight = "xxx/xxx/xxx";
+                        case TargetSide.Ally:
+                            PlayerGrid.AddTileEffect(tilePosition, tileEffect);
                             break;
-                        case AllyTargetRange.DefinedByTargetGrid:
-                            allyTilesToHighlight = _currentAction.TargetSquares.ToString();
-                            break;
-                        case AllyTargetRange.NextToSelf:
-                            allyTilesToHighlight = TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).ToString();
+                        case TargetSide.Enemy:
+                            EnemyGrid.AddTileEffect(tilePosition, tileEffect);
                             break;
                     }
-                    EnemyGrid.ClearHighlights();
-                    EnemyGrid.HighlightTiles([clickedPos], TileColorReason.Hover);
-                    PlayerGrid.ClearHighlights();
-                    PlayerGrid.HighlightTiles(TileMask.Parse(allyTilesToHighlight).Positions, TileColorReason.TargetForAction);
-                    _enemyToTarget = target;
-                    GD.Print("executed half an action");
-                    return true;
+                    GD.Print($"added the {tileEffect.Name} tile effect on (collum:{tilePosition.collum} row:{tilePosition.row})");
                 }
-                else if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange == AllyTargetRange.Self)
+                GD.Print($"all tile effects applied ({_currentAction.TileEffects.Count} effects in total)");
+                
+                string targetId = "";
+                switch (globalActionTargetSide)
                 {
-                    if (_state.ActiveUnit.ExecuteAction(_currentAction))
-                    {
-                        ExecuteActionOnUnits(target, _currentAction.StatToChange, _currentAction.StatChangeAmount, _currentAction.Damage);
-                        ExecuteActionOnUnits(_state.ActiveUnit, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
-                        GD.Print("executed a self action");
-                    }
-                    else GD.PrintErr("No actions left!");
-                    UpdateBattleVisuals();
-                    return true;
+                    case TargetSide.Ally:
+                        _state.PlayerFormation.GetUnitAt(tilePosition);
+                        break;
+                    case TargetSide.Enemy:
+                        _state.EnemyFormation.GetUnitAt(tilePosition);
+                        break;
                 }
-                else if (_enemyToTarget != null && _currentAction.TargetType == TargetType.EnemyAndAlly)
+                Unit target = null;
+                if(TryIsUnitAlive(targetId)) target = _state.AllUnits[targetId];
+                if (target != null)
                 {
-                    if(_state.ActiveUnit.ExecuteAction(_currentAction))
-                    {
-                        ExecuteActionOnUnits(_enemyToTarget, _currentAction.StatToChange,
-                            _currentAction.StatChangeAmount, _currentAction.Damage);
-                        ExecuteActionOnUnits(target, _currentAction.SecondaryStatToChange,
-                            _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
-                        GD.Print("executed an double action");
-                    }
-                    else GD.PrintErr("No actions left!");
-                    UpdateBattleVisuals();
-                    return true;
+                    ExecuteActionOnUnits(target, _currentAction.StatToChange, _currentAction.StatChangeAmount, _currentAction.Damage);
+                    GD.Print($"Executed an action on {target.Name}");
                 }
-                    
-                if (_currentAction.AoiSquares.Positions.Any())
-                {
-                    foreach (var position in TileMask.SquaresToHit(_currentAction.AoiSquares, clickedPos).Positions)
-                    {
-                        string secondaryTargetId;
-                        if (globalActionTargetSide == TargetSide.Ally || _currentAction.TargetSide == TargetSide.Both) secondaryTargetId = _state.PlayerFormation.GetUnitAt(position);
-                        else secondaryTargetId = _state.EnemyFormation.GetUnitAt(position);
-                        Unit secondaryTarget = _state.AllUnits[secondaryTargetId];
-                        if (secondaryTarget != null) ExecuteActionOnUnits(secondaryTarget, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
-                    }
-                }
-
-                if (_state.ActiveUnit.ExecuteAction(_currentAction))
-                {
-                    ExecuteActionOnUnits(target, _currentAction.StatToChange, _currentAction.StatChangeAmount,
-                        _currentAction.Damage);
-                    GD.Print("Action execution should be done here");
-                }
-                else GD.PrintErr("No actions left!");
-                UpdateBattleVisuals();
             }
-            else
-            {
-                GD.PrintErr("No viable target found!");
-            }
+            // string targetId = null;
+            // if (globalActionTargetSide == TargetSide.Ally || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget != null)) targetId = _state.PlayerFormation.GetUnitAt(clickedPos);
+            // else if (globalActionTargetSide == TargetSide.Enemy || (_currentAction.TargetSide == TargetSide.Both && _enemyToTarget == null)) targetId = _state.EnemyFormation.GetUnitAt(clickedPos);
+            // if(targetId != null && TryIsUnitAlive(targetId))
+            // {
+            //     Unit target = _state.AllUnits[targetId];
+            //     if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange != AllyTargetRange.Self && _enemyToTarget != null)
+            //     {
+            //         string allyTilesToHighlight = null;
+            //         switch (_currentAction.AllyTargetRange)
+            //         {
+            //             case AllyTargetRange.Default:
+            //                 allyTilesToHighlight = _currentAction.TargetSquares.ToString();
+            //                 break;
+            //             case AllyTargetRange.NextToSelf:
+            //                 allyTilesToHighlight = TileMask.SquaresToHit(TileMask.Parse(".x./x.x/.x."), pos).ToString();
+            //                 break;
+            //         }
+            //         EnemyGrid.ClearHighlights();
+            //         EnemyGrid.HighlightTiles([clickedPos], TileColorReason.Hover);
+            //         PlayerGrid.ClearHighlights();
+            //         PlayerGrid.HighlightTiles(TileMask.Parse(allyTilesToHighlight).Positions, TileColorReason.TargetForAction);
+            //         _enemyToTarget = target;
+            //         GD.Print("executed half an action");
+            //         return true;
+            //     }
+            //     else if (_currentAction.TargetType == TargetType.EnemyAndAlly && _currentAction.AllyTargetRange == AllyTargetRange.Self)
+            //     {
+            //         if (_state.ActiveUnit.ExecuteAction(_currentAction))
+            //         {
+            //             ExecuteActionOnUnits(target, _currentAction.StatToChange, _currentAction.StatChangeAmount, _currentAction.Damage);
+            //             ExecuteActionOnUnits(_state.ActiveUnit, _currentAction.SecondaryStatToChange, _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
+            //             GD.Print("executed a self action");
+            //         }
+            //         else GD.PrintErr("No actions left!");
+            //         UpdateBattleVisuals();
+            //         return true;
+            //     }
+            //     else if (_enemyToTarget != null && _currentAction.TargetType == TargetType.EnemyAndAlly)
+            //     {
+            //         if(_state.ActiveUnit.ExecuteAction(_currentAction))
+            //         {
+            //             ExecuteActionOnUnits(_enemyToTarget, _currentAction.StatToChange,
+            //                 _currentAction.StatChangeAmount, _currentAction.Damage);
+            //             ExecuteActionOnUnits(target, _currentAction.SecondaryStatToChange,
+            //                 _currentAction.SecondaryStatChangeAmount, _currentAction.SecondaryDamage);
+            //             GD.Print("executed an double action");
+            //         }
+            //         else GD.PrintErr("No actions left!");
+            //         UpdateBattleVisuals();
+            //         return true;
+            //     }
+            //
+            //     if (_state.ActiveUnit.ExecuteAction(_currentAction))
+            //     {
+            //         ExecuteActionOnUnits(target, _currentAction.StatToChange, _currentAction.StatChangeAmount,
+            //             _currentAction.Damage);
+            //         GD.Print("Action execution should be done here");
+            //     }
+            //     else GD.PrintErr("No actions left!");
+            //     UpdateBattleVisuals();
+            // }
+            // else
+            // {
+            //     GD.PrintErr("No viable target found!");
+            // }
         }
         else
         {
@@ -265,7 +261,7 @@ public partial class BattleManager : Node
 
         GD.Print($"  > activeUnit.Side={activeUnit.Side}, clickedSide={clickedSide}");
         
-        if (_currentAction != null && (clickedSide == _currentAction.TargetSide || _currentAction.TargetSide == TargetSide.Both))
+        if (_currentAction != null && clickedSide == _currentAction.TargetSide)
         {
             MovementRules.TryFindUnitPosition(_state, _state.ActiveUnit.Name, out Formation formation, out GridPos pos);
             if(TryExecuteAction(pos, TargetSide.Ally, clickedPos)) _state.ActiveUnit.ActionPoints--;
@@ -275,12 +271,8 @@ public partial class BattleManager : Node
 
         if (clickedSide != TargetSide.Ally) return; 
         if (clickedSide != activeUnit.Side) return;
-        
-        if (TryMoveUnit(activeUnit, clickedPos))
-        {
-            if (activeUnit.Movement - 1 < 0) activeUnit.ActionPoints--;
-            else activeUnit.Movement--;
-        }
+
+        TryMoveUnit(activeUnit, clickedPos);
         
         if(_state.ActiveUnit.ActionPoints <= 0) ButtonManager.RemoveButtons();
         if (_state.ActiveUnit.ActionPoints <= 0 && _state.ActiveUnit.Movement <= 0)
@@ -473,11 +465,7 @@ public partial class BattleManager : Node
                         GridPos? target = EnemyAI.PickMoveTarget(_state, enemyUnit);
                         if (target != null)
                         {
-                            if (TryMoveUnit(enemyUnit, (GridPos)target))
-                            {
-                                if (enemyUnit.Movement - 1 < 0) enemyUnit.ActionPoints--;
-                                else enemyUnit.Movement--;
-                            }
+                            TryMoveUnit(enemyUnit, (GridPos)target);
                         }
                     }
                     else
@@ -521,6 +509,7 @@ public partial class BattleManager : Node
                 GD.Print($"SUCCESS! Unit {unitToMove.Name} moved to {destinationSquare.row},{destinationSquare.collum}");
                 UpdateMovementHighlights();
                 UnitInfoPanel?.UpdateInfo(_state.ActiveUnit);
+                unitToMove.Move(pos, destinationSquare);
                 return true;
             }
         }
