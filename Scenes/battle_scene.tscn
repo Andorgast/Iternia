@@ -15,6 +15,110 @@
 [ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="9_ed262"]
 [ext_resource type="PackedScene" uid="uid://ddy2qxxxxxxx" path="res://Scenes/UnitInfoPanel.tscn" id="10_info"]
 [ext_resource type="PackedScene" uid="uid://dha5vubf01bsp" path="res://Scenes/UnitAbilityInfoPanel.tscn" id="15_f856b"]
+[ext_resource type="Texture2D" uid="uid://burxnsxpqy507" path="res://Assets/UI refresh/Timeline 1_0021.png" id="16_3dch1"]
+[ext_resource type="Texture2D" uid="uid://b5n3navalnn0e" path="res://Assets/UI refresh/Timeline 1_0000.png" id="17_ytpxr"]
+[ext_resource type="Texture2D" uid="uid://db2freh5kughu" path="res://Assets/UI refresh/Timeline 1_0001.png" id="18_c4nf3"]
+[ext_resource type="Texture2D" uid="uid://bb1calvodbo8u" path="res://Assets/UI refresh/Timeline 1_0002.png" id="19_e5k3s"]
+[ext_resource type="Texture2D" uid="uid://jtkpdjd6007v" path="res://Assets/UI refresh/Timeline 1_0003.png" id="20_n0n13"]
+[ext_resource type="Texture2D" uid="uid://b7knsne73drdb" path="res://Assets/UI refresh/Timeline 1_0004.png" id="21_nm4fv"]
+[ext_resource type="Texture2D" uid="uid://d1l5qbu1kd6ck" path="res://Assets/UI refresh/Timeline 1_0005.png" id="22_n1mwy"]
+[ext_resource type="Texture2D" uid="uid://bjh12am08btg" path="res://Assets/UI refresh/Timeline 1_0006.png" id="23_5s253"]
+[ext_resource type="Texture2D" uid="uid://ck463qpcm3yb5" path="res://Assets/UI refresh/Timeline 1_0007.png" id="24_gd4pf"]
+[ext_resource type="Texture2D" uid="uid://d3kgfc35nhg44" path="res://Assets/UI refresh/Timeline 1_0008.png" id="25_3dx7i"]
+[ext_resource type="Texture2D" uid="uid://ygk2pbtt554g" path="res://Assets/UI refresh/Timeline 1_0009.png" id="26_fd4le"]
+[ext_resource type="Texture2D" uid="uid://6gxuutthn1hp" path="res://Assets/UI refresh/Timeline 1_0010.png" id="27_ny502"]
+[ext_resource type="Texture2D" uid="uid://c6kh45r2yb0y2" path="res://Assets/UI refresh/Timeline 1_0011.png" id="28_e0ut6"]
+[ext_resource type="Texture2D" uid="uid://djurwwve2ft4t" path="res://Assets/UI refresh/Timeline 1_0012.png" id="29_wvt53"]
+[ext_resource type="Texture2D" uid="uid://6n64h67uvnj7" path="res://Assets/UI refresh/Timeline 1_0013.png" id="30_k6q5d"]
+[ext_resource type="Texture2D" uid="uid://btyusjudnnukb" path="res://Assets/UI refresh/Timeline 1_0014.png" id="31_i8ukf"]
+[ext_resource type="Texture2D" uid="uid://bmiaktjwnmhnw" path="res://Assets/UI refresh/Timeline 1_0015.png" id="32_varts"]
+[ext_resource type="Texture2D" uid="uid://4i7ujjdvvs53" path="res://Assets/UI refresh/Timeline 1_0016.png" id="33_vyq3c"]
+[ext_resource type="Texture2D" uid="uid://dgqe3fwxidoxt" path="res://Assets/UI refresh/Timeline 1_0017.png" id="34_r4qka"]
+[ext_resource type="Texture2D" uid="uid://dgmmrwjqwx62e" path="res://Assets/UI refresh/Timeline 1_0018.png" id="35_r6voa"]
+[ext_resource type="Texture2D" uid="uid://bm0r0hsfcd0kv" path="res://Assets/UI refresh/Timeline 1_0019.png" id="36_akqug"]
+[ext_resource type="Texture2D" uid="uid://c56vef473lawe" path="res://Assets/UI refresh/Timeline 1_0020.png" id="37_cy8tj"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6t4lg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_3dch1")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_ytpxr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_c4nf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_e5k3s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_n0n13")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_nm4fv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_n1mwy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_5s253")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_gd4pf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_3dx7i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_fd4le")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_ny502")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_e0ut6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_wvt53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_k6q5d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_i8ukf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_varts")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_vyq3c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_r4qka")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_r6voa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_akqug")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_cy8tj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_3dch1")
+}],
+"loop": 0,
+"name": &"ui_update",
+"speed": 24.0
+}]
 
 [node name="BattleScene" type="Node2D" unique_id=356016453 node_paths=PackedStringArray("PlayerGrid", "EnemyGrid", "TurnOrderHUD", "UnitInfoPanel", "UnitAbilityInfoPanel", "ButtonManager")]
 script = ExtResource("1_e5vbs")
@@ -32,29 +136,33 @@ UnitInfoPanel = NodePath("UILayer/UnitInfoPanel")
 UnitAbilityInfoPanel = NodePath("UILayer/UnitAbilityInfoPanel")
 ButtonManager = NodePath("ButtonManager")
 
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2016365844]
+sprite_frames = SubResource("SpriteFrames_6t4lg")
+frame_progress = 0.78105175
+
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
-position = Vector2(151, 290)
+position = Vector2(-650, 0)
 script = ExtResource("3_gt16y")
 TileScene = ExtResource("4_20f6w")
 
 [node name="EnemyGrid" type="Node2D" parent="." unique_id=664863384]
-position = Vector2(727, 273)
+position = Vector2(250, 0)
 script = ExtResource("3_gt16y")
 Side = 1
 TileScene = ExtResource("4_20f6w")
 
 [node name="ButtonManager" type="Node2D" parent="." unique_id=370170379]
-position = Vector2(0, 250)
+position = Vector2(-107, 149)
 script = ExtResource("8_w4764")
 _buttonScene = ExtResource("9_ed262")
 _buttonWidth = 128
 _spacing = 100
 
 [node name="TurnOrderHUD" parent="." unique_id=1648753853 instance=ExtResource("7_w4764")]
-offset_left = 533.0
-offset_top = 34.0
-offset_right = 533.0
-offset_bottom = 94.0
+offset_left = 171.0
+offset_top = 184.0
+offset_right = 171.0
+offset_bottom = 244.0
 layout_direction = 2
 alignment = 1
 
@@ -68,3 +176,5 @@ offset_left = -200.0
 offset_top = -421.0
 offset_right = 0.0
 offset_bottom = 0.0
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1600346020]
