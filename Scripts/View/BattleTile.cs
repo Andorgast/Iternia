@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using Godot.Collections;
 using Iternia.Scripts.Core;
 using Iternia.Scripts.Models;
 
@@ -7,22 +8,18 @@ namespace Iternia.View;
 
 public partial class BattleTile : Area2D
 {
-    [Export] public Color NormalColor { get; set; } = Colors.White;
-    [Export] public Color MoveToColor { get; set; } = Colors.Red;
-    [Export] public Color OriginColor { get; set; } = Colors.Yellow;
-    [Export] public Color TargetColor { get; set; } = Colors.Blue;
-    [Export] public Color HoverColor { get; set; } = Colors.Cyan;
+    [Export] public CpuParticles2D Walkable { get; set; }
+    [Export] public CpuParticles2D Origin { get; set; }
+    [Export] public CpuParticles2D Target { get; set; }
+    [Export] public CpuParticles2D Hover { get; set; }
 
-    private Sprite2D _sprite;
+    // [Export] public Array<AnimatedSprite2D> testthingg;
+    [Export] public Array<PackedScene> AllowedProps;
     public GridPos LogicalPos { get; private set; }
     public List<TileEffect> TileEffectList { get; set; } = [];
 
-    private bool _isHovered;
-
     public override void _Ready()
     {
-        _sprite = GetNode<Sprite2D>("Sprite2D");
-        
         MouseEntered += OnMouseEntered;
         MouseExited += OnMouseExited;
     }
@@ -57,15 +54,14 @@ public partial class BattleTile : Area2D
         UpdateVisuals(false, TileColorReason.Hover, false);
     }
 
-    public void UpdateVisuals(bool resetColor, TileColorReason tileColorReason, bool addingColor)
+    public void UpdateVisuals(bool reset, TileColorReason tileColorReason, bool addingColor)
     {
-        if (_sprite == null) return;
-        
-        if (resetColor) _sprite.Modulate = NormalColor;
-
-        if (!addingColor && _sprite.Modulate == NormalColor)
+        if (reset)
         {
-            return;
+            Walkable.Emitting = false;
+            Origin.Emitting = false;
+            Target.Emitting = false;
+            Hover.Emitting = false;
         }
         
         if (addingColor)
@@ -73,16 +69,16 @@ public partial class BattleTile : Area2D
             switch (tileColorReason)
             {
                 case TileColorReason.MovePossible:
-                    _sprite.Modulate += MoveToColor;
+                    Walkable.Emitting = true;
                     break;
                 case TileColorReason.OriginForAction:
-                    _sprite.Modulate += OriginColor;
+                    Origin.Emitting = true;
                     break;
                 case TileColorReason.TargetForAction:
-                    _sprite.Modulate += TargetColor;
+                    Target.Emitting = true;
                     break;
                 case TileColorReason.Hover:
-                    _sprite.Modulate += HoverColor;
+                    Hover.Emitting = true;
                     break;
             }
         }
@@ -93,16 +89,16 @@ public partial class BattleTile : Area2D
                 case TileColorReason.Reset:
                     break;
                 case TileColorReason.MovePossible:
-                    _sprite.Modulate -= MoveToColor;
+                    Walkable.Emitting = false;
                     break;
                 case TileColorReason.OriginForAction:
-                    _sprite.Modulate -= OriginColor;
+                    Origin.Emitting = false;
                     break;
                 case TileColorReason.TargetForAction:
-                    _sprite.Modulate -= TargetColor;
+                    Target.Emitting = false;
                     break;
                 case TileColorReason.Hover:
-                    _sprite.Modulate -= HoverColor;
+                    Hover.Emitting = false;
                     break;
             }
         }

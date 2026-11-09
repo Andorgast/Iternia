@@ -87,20 +87,11 @@ public partial class BattleManager : Node
     private void SpawnUnitFromResource(Unit battleUnit, TargetSide side, GridPos pos)
     {
         if (battleUnit == null) return;
-        
         battleUnit.Init();
-
-        GD.Print($"Battle Unit: {battleUnit.Movement}");
-
-
-        // Unit battleUnit = new Unit();
-        // battleUnit.Side = side;
-        
         _state.AllUnits[battleUnit.Name] = battleUnit;
         Formation formation = side == TargetSide.Ally ? _state.PlayerFormation : _state.EnemyFormation;
         bool placed = formation.PlaceUnit(battleUnit.Name, pos);
         GD.Print($"Spawning '{battleUnit.Name}' on {side} at ({pos.collum},{pos.row}) -> placed={placed}");
-
         if (UnitViewScene != null)
         {
             var view = UnitViewScene.Instantiate();

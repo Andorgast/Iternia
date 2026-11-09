@@ -42,14 +42,6 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("16_3dch1")
-}],
-"loop": 1,
-"name": &"default",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": ExtResource("17_ytpxr")
 }, {
 "duration": 1.0,
@@ -116,7 +108,7 @@ animations = [{
 "texture": ExtResource("16_3dch1")
 }],
 "loop": 0,
-"name": &"ui_update",
+"name": &"forest",
 "speed": 24.0
 }]
 
@@ -138,15 +130,18 @@ ButtonManager = NodePath("ButtonManager")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2016365844]
 sprite_frames = SubResource("SpriteFrames_6t4lg")
-frame_progress = 0.78105175
+animation = &"forest"
+autoplay = "forest"
+frame = 21
+frame_progress = 1.0
 
 [node name="PlayerGrid" type="Node2D" parent="." unique_id=901241082]
-position = Vector2(-650, 0)
+position = Vector2(-730, -154)
 script = ExtResource("3_gt16y")
 TileScene = ExtResource("4_20f6w")
 
 [node name="EnemyGrid" type="Node2D" parent="." unique_id=664863384]
-position = Vector2(250, 0)
+position = Vector2(209, -138)
 script = ExtResource("3_gt16y")
 Side = 1
 TileScene = ExtResource("4_20f6w")

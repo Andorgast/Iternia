@@ -60,3 +60,11 @@ public enum TileEffectType
     PermStatChange,
     TileRemove
 }
+
+public enum Areas
+{
+    Forest,
+    Ice,
+    Volcano,
+    Final
+}

@@ -1,0 +1,159 @@
+[gd_scene format=3 uid="uid://bo4q6tpw37b7k"]
+
+[ext_resource type="Script" uid="uid://c85bbkf5g801u" path="res://Scripts/View/ForestBattleInit.cs" id="1_ifvpo"]
+[ext_resource type="Texture2D" uid="uid://burxnsxpqy507" path="res://Assets/UI refresh/Timeline 1_0021.png" id="1_wlj4t"]
+[ext_resource type="Texture2D" uid="uid://b5n3navalnn0e" path="res://Assets/UI refresh/Timeline 1_0000.png" id="2_ifvpo"]
+[ext_resource type="Texture2D" uid="uid://db2freh5kughu" path="res://Assets/UI refresh/Timeline 1_0001.png" id="3_lwr2s"]
+[ext_resource type="Texture2D" uid="uid://bb1calvodbo8u" path="res://Assets/UI refresh/Timeline 1_0002.png" id="4_khscm"]
+[ext_resource type="Texture2D" uid="uid://jtkpdjd6007v" path="res://Assets/UI refresh/Timeline 1_0003.png" id="5_7v32h"]
+[ext_resource type="Texture2D" uid="uid://b7knsne73drdb" path="res://Assets/UI refresh/Timeline 1_0004.png" id="6_arixg"]
+[ext_resource type="Texture2D" uid="uid://d1l5qbu1kd6ck" path="res://Assets/UI refresh/Timeline 1_0005.png" id="7_14ape"]
+[ext_resource type="Texture2D" uid="uid://bjh12am08btg" path="res://Assets/UI refresh/Timeline 1_0006.png" id="8_v3x2o"]
+[ext_resource type="Texture2D" uid="uid://ck463qpcm3yb5" path="res://Assets/UI refresh/Timeline 1_0007.png" id="9_n2aiv"]
+[ext_resource type="Texture2D" uid="uid://d3kgfc35nhg44" path="res://Assets/UI refresh/Timeline 1_0008.png" id="10_ut4oy"]
+[ext_resource type="Texture2D" uid="uid://ygk2pbtt554g" path="res://Assets/UI refresh/Timeline 1_0009.png" id="11_jp27h"]
+[ext_resource type="Texture2D" uid="uid://6gxuutthn1hp" path="res://Assets/UI refresh/Timeline 1_0010.png" id="12_ya1d5"]
+[ext_resource type="Texture2D" uid="uid://c6kh45r2yb0y2" path="res://Assets/UI refresh/Timeline 1_0011.png" id="13_x6124"]
+[ext_resource type="Texture2D" uid="uid://djurwwve2ft4t" path="res://Assets/UI refresh/Timeline 1_0012.png" id="14_ux1ol"]
+[ext_resource type="Texture2D" uid="uid://6n64h67uvnj7" path="res://Assets/UI refresh/Timeline 1_0013.png" id="15_pmc6q"]
+[ext_resource type="Texture2D" uid="uid://btyusjudnnukb" path="res://Assets/UI refresh/Timeline 1_0014.png" id="16_a11if"]
+[ext_resource type="Texture2D" uid="uid://bmiaktjwnmhnw" path="res://Assets/UI refresh/Timeline 1_0015.png" id="17_o0ims"]
+[ext_resource type="Texture2D" uid="uid://4i7ujjdvvs53" path="res://Assets/UI refresh/Timeline 1_0016.png" id="18_mjnau"]
+[ext_resource type="Texture2D" uid="uid://dgqe3fwxidoxt" path="res://Assets/UI refresh/Timeline 1_0017.png" id="19_reooj"]
+[ext_resource type="Texture2D" uid="uid://dgmmrwjqwx62e" path="res://Assets/UI refresh/Timeline 1_0018.png" id="20_6jbnc"]
+[ext_resource type="Texture2D" uid="uid://bm0r0hsfcd0kv" path="res://Assets/UI refresh/Timeline 1_0019.png" id="21_he65n"]
+[ext_resource type="Texture2D" uid="uid://c56vef473lawe" path="res://Assets/UI refresh/Timeline 1_0020.png" id="22_ip8on"]
+[ext_resource type="Script" uid="uid://dnmlre5q5vd8k" path="res://Scripts/View/GridView.cs" id="23_ghyi4"]
+[ext_resource type="PackedScene" uid="uid://b72lkjg7bwwx7" path="res://Scenes/battle_tile.tscn" id="24_2gkn6"]
+[ext_resource type="Script" uid="uid://dce6g7e6jeqkk" path="res://Scripts/View/ButtonManager.cs" id="25_7ulhi"]
+[ext_resource type="PackedScene" uid="uid://bowuem1o2egby" path="res://Scenes/button.tscn" id="26_a2i4w"]
+[ext_resource type="PackedScene" uid="uid://yitm8djlcual" path="res://Scenes/turn_order_hud.tscn" id="27_pnpru"]
+[ext_resource type="PackedScene" uid="uid://ddy2qxxxxxxx" path="res://Scenes/UnitInfoPanel.tscn" id="28_dfy3y"]
+[ext_resource type="PackedScene" uid="uid://dha5vubf01bsp" path="res://Scenes/UnitAbilityInfoPanel.tscn" id="29_sksgk"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rbloy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_wlj4t")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ifvpo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_lwr2s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_khscm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_7v32h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_arixg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_14ape")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_v3x2o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_n2aiv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_ut4oy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_jp27h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_ya1d5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_x6124")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ux1ol")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_pmc6q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_a11if")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_o0ims")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_mjnau")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_reooj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_6jbnc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_he65n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_ip8on")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_wlj4t")
+}],
+"loop": 0,
+"name": &"ui_update",
+"speed": 24.0
+}]
+
+[node name="ForestBattle" type="Node2D" unique_id=2142058572]
+script = ExtResource("1_ifvpo")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1877989387]
+sprite_frames = SubResource("SpriteFrames_rbloy")
+
+[node name="PlayerGrid" type="Node2D" parent="." unique_id=317353821]
+position = Vector2(-650, 0)
+script = ExtResource("23_ghyi4")
+TileScene = ExtResource("24_2gkn6")
+
+[node name="EnemyGrid" type="Node2D" parent="." unique_id=2137043409]
+position = Vector2(250, 0)
+script = ExtResource("23_ghyi4")
+Side = 1
+TileScene = ExtResource("24_2gkn6")
+
+[node name="ButtonManager" type="Node2D" parent="." unique_id=781219651]
+position = Vector2(-107, 149)
+script = ExtResource("25_7ulhi")
+_buttonScene = ExtResource("26_a2i4w")
+_buttonWidth = 128
+_spacing = 100
+
+[node name="TurnOrderHUD" parent="." unique_id=1648753853 instance=ExtResource("27_pnpru")]
+offset_left = 171.0
+offset_top = 184.0
+offset_right = 171.0
+offset_bottom = 244.0
+layout_direction = 2
+alignment = 1
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=470718002]
+
+[node name="UnitInfoPanel" parent="UILayer" unique_id=879465057 instance=ExtResource("28_dfy3y")]
+
+[node name="UnitAbilityInfoPanel" parent="UILayer" unique_id=317580938 instance=ExtResource("29_sksgk")]
+visible = false
+offset_left = -200.0
+offset_top = -421.0
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=579734586]

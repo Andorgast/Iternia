@@ -1,7 +1,9 @@
+using System;
 using Godot;
 using Iternia.Scripts.Core;
 using System.Collections.Generic;
 using System.Linq;
+using Godot.Collections;
 using Iternia.Scripts.Models;
 
 namespace Iternia.View;
@@ -9,13 +11,14 @@ namespace Iternia.View;
 public partial class GridView : Node2D
 {
     [Export] public TargetSide Side { get; set; } = TargetSide.Ally;
-    [Export] public int TileSize { get; set; } = 64;
-    [Export] public int Spacing { get; set; } = 4;
+    [Export] public int TileSizeX { get; set; } = 220;
+    [Export] public int TileSizeY { get; set; } = 130;
+    [Export] public int Spacing { get; set; } = 0;
     [Export] public int Rows { get; set; } = 3;
     [Export] public int Collums { get; set; } = 3;
     [Export] public PackedScene TileScene { get; set; }
 
-    private Dictionary<GridPos, BattleTile> _tiles = new();
+    private System.Collections.Generic.Dictionary<GridPos, BattleTile> _tiles = new();
     
     public event System.Action<TargetSide, GridPos> OnTileClicked;
 
@@ -45,9 +48,9 @@ public partial class GridView : Node2D
         }
     }
 
-    public Dictionary<GridPos, List<TileEffect>> GetTilesWEffects()
+    public System.Collections.Generic.Dictionary<GridPos, List<TileEffect>> GetTilesWEffects()
     {
-        Dictionary<GridPos, List<TileEffect>> tempList = [];
+        System.Collections.Generic.Dictionary<GridPos, List<TileEffect>> tempList = [];
         for (int i = 0; i < _tiles.Count; i++)
         {
             if (_tiles.Values.ToList()[i].TileEffectList.Any()) tempList.Add(_tiles.Keys.ToList()[i], _tiles.Values.ToList()[i].TileEffectList);
@@ -62,6 +65,7 @@ public partial class GridView : Node2D
     
     private void GenerateGrid()
     {
+        RandomNumberGenerator rng = new RandomNumberGenerator();
         if (TileScene == null)
         {
             GD.PrintErr("TileScene is leeg! Sleep BattleTile.tscn in de inspector van GridView.");
@@ -76,6 +80,16 @@ public partial class GridView : Node2D
                 Vector2 screenPos = GridToScreen(pos);
 
                 BattleTile tile = TileScene.Instantiate<BattleTile>();
+                Array<Node> propNodes = tile.GetNode("Props").GetChildren();
+                String[] animationNames = [];
+                foreach (Node propNode in propNodes)
+                {
+                    AnimatedSprite2D propSprite = tile.AllowedProps[0].Instantiate<AnimatedSprite2D>();
+                    if(animationNames.Length == 0) animationNames = propSprite.GetSpriteFrames().GetAnimationNames();
+                    propSprite.Play(animationNames[rng.RandiRange(0, animationNames.Length - 1)]);
+                    propNode.AddChild(propSprite);
+                }
+                
                 
                 AddChild(tile); 
                 
@@ -97,8 +111,8 @@ public partial class GridView : Node2D
             xIndex = 2 - pos.collum;
         }
 
-        float x = xIndex * (TileSize + Spacing);
-        float y = pos.row * (TileSize + Spacing);
+        float x = xIndex * (TileSizeX + Spacing);
+        float y = pos.row * (TileSizeY + Spacing);
         
         return new Vector2(x, y);
     }
