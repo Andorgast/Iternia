@@ -13,12 +13,11 @@ public class EnemyAI
 
     public static GridPos? PickMoveTarget(BattleState state, EnemyUnit enemy)
     {
-        if (!MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos currentPos))
+        if (!MovementRules.TryFindUnitPosition(state, enemy.Name, out Formation formation, out GridPos currentPos))
             return null;
 
-        var candidates = enemy.AllowedTiles
-            .GetPositions()
-            .Where(pos =>
+        var candidates = enemy.AllowedTiles.Positions.Where
+            (pos =>
             {
                 if (pos == currentPos) return false;
                 if (formation.GetUnitAt(pos) != null) return false;
@@ -34,16 +33,16 @@ public class EnemyAI
         return candidates[_rng.Next(candidates.Count)];
     }
 
-    public (Models.Action Action, GridPos TargetPos, GridPos? SecondTargetPos)? PickAbility(BattleState state, EnemyUnit enemy)
+    public static (Models.Action Action, GridPos TargetPos, GridPos? SecondTargetPos)? PickAbility(BattleState state, EnemyUnit enemy)
     {
-        if (!MovementRules.TryFindUnitPosition(state, enemy.Id, out Formation formation, out GridPos enemyPos))
+        if (!MovementRules.TryFindUnitPosition(state, enemy.Name, out Formation formation, out GridPos enemyPos))
             return null;
 
         var usable = new List<(Models.Action Action, GridPos TargetPos, GridPos? SecondTargetPos)>();
 
         foreach (var action in enemy.Actions)
         {
-            if (!action.OriginSquares.HasPos(enemyPos))
+            if (!action.OriginSquares.Positions.Contains(enemyPos))
                 continue;
 
             Formation targetFormation = action.TargetSide != TargetSide.Ally
@@ -51,7 +50,7 @@ public class EnemyAI
                 : state.EnemyFormation;
 
             var validTargets = action.TargetSquares
-                .GetPositions()
+                .Positions
                 .Where(tile => targetFormation.GetUnitAt(tile) != null && state.AllUnits.Keys.Contains(targetFormation.GetUnitAt(tile)))
                 .ToList();
 

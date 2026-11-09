@@ -6,11 +6,11 @@ namespace Iternia.Scripts.Core;
 
 public class TileMask
 {
-    private readonly HashSet<GridPos> _positions;
+    public readonly HashSet<GridPos> Positions;
 
-    public TileMask(IEnumerable<GridPos> positions)
+    private TileMask(IEnumerable<GridPos> positions)
     {
-        _positions = new HashSet<GridPos>(positions);
+        Positions = new HashSet<GridPos>(positions);
     }
 
     public static TileMask Parse(string mask)
@@ -64,7 +64,7 @@ public class TileMask
                     &&
                     originPoint.row + row >= 0 && originPoint.row <= 3
                     &&
-                    aoi.HasPos(new GridPos(collum + 1, row + 1))
+                    aoi.Positions.Contains(new GridPos(collum + 1, row + 1))
                 )
                     posList.Add(new GridPos(originPoint.collum + collum, originPoint.row + row));
             }
@@ -72,20 +72,10 @@ public class TileMask
         return new TileMask(posList);
     }
 
-    public bool HasPos(GridPos pos)
-    {
-        return _positions.Contains(pos);
-    }
-
-    public IEnumerable<GridPos> GetPositions()
-    {
-        return _positions;
-    }
-
     public TileMask Intersect(TileMask other)
     {
-        var combined = new HashSet<GridPos>(_positions);
-        combined.IntersectWith(other._positions);
+        var combined = new HashSet<GridPos>(Positions);
+        combined.IntersectWith(other.Positions);
         return new TileMask(combined);
     }
 
@@ -96,7 +86,7 @@ public class TileMask
         {
             for (int row = 0; row < 3; row++)
             {
-                if (_positions.Contains(new GridPos(row, collum))) returnString += "X";
+                if (Positions.Contains(new GridPos(row, collum))) returnString += "X";
                 else returnString += ".";
             }
             returnString += "/";

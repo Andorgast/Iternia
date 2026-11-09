@@ -1,17 +1,121 @@
 [gd_scene format=3 uid="uid://b72lkjg7bwwx7"]
 
 [ext_resource type="Script" uid="uid://dksnflekl8rht" path="res://Scripts/View/BattleTile.cs" id="1_xkj1e"]
-[ext_resource type="Texture2D" uid="uid://i1afdqkbrpw" path="res://icon.svg" id="2_lmaiv"]
+[ext_resource type="PackedScene" uid="uid://cpo3fmbex76vr" path="res://Scenes/Props/forest_props.tscn" id="2_xkj1e"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ix2id"]
-size = Vector2(64, 64)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u38bq"]
+radius = 65.0
+height = 220.0
 
-[node name="BattleTile" type="Area2D" unique_id=330090911]
+[sub_resource type="Gradient" id="Gradient_u38bq"]
+colors = PackedColorArray(0.25565878, 0.25565878, 0.25565878, 1, 1, 1, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_6t4lg"]
+colors = PackedColorArray(1, 1, 1, 1, 0.37665847, 0.37665847, 0.37665847, 1)
+
+[sub_resource type="Gradient" id="Gradient_8y1ju"]
+colors = PackedColorArray(1, 1, 1, 1, 0.24840015, 0.24840018, 0.24840015, 1)
+
+[node name="BattleTile" type="Area2D" unique_id=330090911 node_paths=PackedStringArray("Walkable", "Origin", "Target", "Hover")]
 script = ExtResource("1_xkj1e")
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=89027101]
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_lmaiv")
+Walkable = NodePath("Walkable")
+Origin = NodePath("Origin")
+Target = NodePath("Target")
+Hover = NodePath("Highlight")
+AllowedProps = Array[PackedScene]([ExtResource("2_xkj1e")])
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2103591094]
-shape = SubResource("RectangleShape2D_ix2id")
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_u38bq")
+
+[node name="Props" type="Node2D" parent="." unique_id=87677357]
+
+[node name="PropSpot1" type="Node2D" parent="Props" unique_id=607395644]
+position = Vector2(-76, -57)
+
+[node name="PropSpot2" type="Node2D" parent="Props" unique_id=959167796]
+position = Vector2(-43, 64)
+
+[node name="PropSpot3" type="Node2D" parent="Props" unique_id=764981061]
+position = Vector2(108, 15)
+
+[node name="Origin" type="CPUParticles2D" parent="." unique_id=479764165]
+scale = Vector2(1, 0.6)
+emitting = false
+amount = 2000
+lifetime = 1.5
+explosiveness = 0.1
+lifetime_randomness = 1.0
+local_coords = true
+emission_shape = 2
+emission_sphere_radius = 110.0
+gravity = Vector2(0, 0)
+angular_velocity_max = 256.79
+orbit_velocity_max = 1.0
+radial_accel_min = 100.0
+radial_accel_max = 100.0
+scale_amount_min = 2.0
+scale_amount_max = 4.0
+color = Color(0, 1, 0.63529414, 1)
+color_ramp = SubResource("Gradient_u38bq")
+
+[node name="Target" type="CPUParticles2D" parent="." unique_id=423195434]
+scale = Vector2(1, 0.6)
+emitting = false
+amount = 2000
+lifetime = 1.5
+explosiveness = 0.1
+randomness = 0.57
+lifetime_randomness = 1.0
+local_coords = true
+emission_shape = 2
+emission_sphere_radius = 110.0
+gravity = Vector2(0, 0)
+angular_velocity_max = 256.79
+orbit_velocity_max = 0.5
+radial_accel_min = -100.0
+radial_accel_max = -100.0
+scale_amount_min = 2.0
+scale_amount_max = 4.0
+color = Color(1, 0, 0.34509805, 1)
+color_ramp = SubResource("Gradient_6t4lg")
+
+[node name="Walkable" type="CPUParticles2D" parent="." unique_id=1204524276]
+scale = Vector2(1, 0.6)
+emitting = false
+amount = 2000
+lifetime = 4.0
+explosiveness = 0.1
+randomness = 1.0
+lifetime_randomness = 1.0
+local_coords = true
+emission_shape = 2
+emission_sphere_radius = 110.0
+gravity = Vector2(0, 0)
+orbit_velocity_min = -0.1
+orbit_velocity_max = 0.1
+radial_accel_min = -1.0
+radial_accel_max = 5.0
+scale_amount_min = 2.0
+scale_amount_max = 4.0
+color = Color(0.65882355, 0.8039216, 1, 1)
+
+[node name="Highlight" type="CPUParticles2D" parent="." unique_id=357782174]
+scale = Vector2(1, 0.6)
+emitting = false
+amount = 2000
+lifetime = 3.0
+explosiveness = 0.8
+lifetime_randomness = 0.2
+local_coords = true
+emission_shape = 2
+emission_sphere_radius = 110.0
+gravity = Vector2(0, 0)
+angular_velocity_min = 400.0
+angular_velocity_max = 450.0
+radial_accel_min = -100.0
+radial_accel_max = -100.0
+scale_amount_min = 2.0
+scale_amount_max = 4.0
+color = Color(0.5686275, 0, 1, 1)
+color_ramp = SubResource("Gradient_8y1ju")

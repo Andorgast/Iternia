@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://cpo3fmbex76vr"]
+
+[ext_resource type="Texture2D" uid="uid://bbhoiaf3cwjn" path="res://Assets/Small props forest/Mushroom 1/Iternia_mushrroom_1_0000.png" id="1_0414v"]
+[ext_resource type="Texture2D" uid="uid://x4wo70n7on8m" path="res://Assets/Small props forest/Mushroom 1/Iternia_mushrroom_1_0001.png" id="2_l4o5u"]
+[ext_resource type="Texture2D" uid="uid://35anmpw6m4x1" path="res://Assets/Small props forest/Mushroom 1/Iternia_mushrroom_1_0002.png" id="3_6ccwr"]
+[ext_resource type="Texture2D" uid="uid://bttfgxjvmqdxf" path="res://Assets/Small props forest/Mushroom 1/Iternia_mushrroom_1_0003.png" id="4_jd8sj"]
+[ext_resource type="Texture2D" uid="uid://bm84rqrtjb573" path="res://Assets/Small props forest/Mushroom 1/Iternia_mushrroom_1_0004.png" id="5_a4s8b"]
+[ext_resource type="Texture2D" uid="uid://b6obt73hl3p6m" path="res://Assets/Small props forest/Mushroom 1/Iternia_mushrroom_1_0005.png" id="6_5x1ep"]
+[ext_resource type="Texture2D" uid="uid://b54bo7y2shdtg" path="res://Assets/Small props forest/Mushroom 1/Iternia_mushrroom_1_0006.png" id="7_rbekv"]
+[ext_resource type="Texture2D" uid="uid://dv4ucn05shebp" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0000.png" id="8_yks4p"]
+[ext_resource type="Texture2D" uid="uid://uq7i4f05c4t0" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0001.png" id="9_poq4a"]
+[ext_resource type="Texture2D" uid="uid://b28eiumeomc87" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0002.png" id="10_rstpv"]
+[ext_resource type="Texture2D" uid="uid://ditmchvoq0m4k" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0003.png" id="11_pyei7"]
+[ext_resource type="Texture2D" uid="uid://cpgj0uctis6nv" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0004.png" id="12_6nir6"]
+[ext_resource type="Texture2D" uid="uid://cnv1pn8c4wysf" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0005.png" id="13_bkpf3"]
+[ext_resource type="Texture2D" uid="uid://3cnmsovfco8c" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0006.png" id="14_jnl4p"]
+[ext_resource type="Texture2D" uid="uid://bmild0rgcks77" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0007.png" id="15_40f5o"]
+[ext_resource type="Texture2D" uid="uid://7npvdq06gdd6" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0008.png" id="16_nqk4h"]
+[ext_resource type="Texture2D" uid="uid://tbyuocaf4beh" path="res://Assets/Small props forest/Mushroom 2/Iternia_mushroom_2_0009.png" id="17_s4g3x"]
+[ext_resource type="Texture2D" uid="uid://bspcak43xt8b0" path="res://Assets/Small props forest/IterniaMushroomLog.png" id="18_dmv7k"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6t4lg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_0414v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_l4o5u")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_6ccwr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_jd8sj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_a4s8b")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_5x1ep")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_rbekv")
+}],
+"loop": 0,
+"name": &"mushroom_1",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_yks4p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_poq4a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_rstpv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_pyei7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_6nir6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_bkpf3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_jnl4p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_40f5o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_nqk4h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_s4g3x")
+}],
+"loop": 0,
+"name": &"mushroom_2",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_dmv7k")
+}],
+"loop": 0,
+"name": &"mushroom_log",
+"speed": 24.0
+}]
+
+[node name="ForestProps" type="AnimatedSprite2D" unique_id=587165013]
+sprite_frames = SubResource("SpriteFrames_6t4lg")
+animation = &"mushroom_1"
+frame = 6
+frame_progress = 1.0
